@@ -1,7 +1,12 @@
-import "./App.css";
+import React from "react";
+import PrincipalPage from "./PrincipalPage/PagePrincipal";
 
 function App() {
-  return <div className="App">App</div>;
+  return (
+    <div className="App">
+      <PrincipalPage />
+    </div>
+  );
 }
 
 export default App;
