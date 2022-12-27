@@ -1,10 +1,10 @@
 import React from "react";
-import PrincipalPage from "./PrincipalPage/PagePrincipal";
+import Header from "./PrincipalPage/Components/Header";
 
 function App() {
   return (
-    <div className="App">
-      <PrincipalPage />
+    <div>
+      <Header />
     </div>
   );
 }

@@ -1,11 +1,7 @@
 import React from "react";
 
 const PrincipalPage = () => {
-  return (
-    <section>
-      <h1>Header</h1>
-    </section>
-  );
+  return <div></div>;
 };
 
 export default PrincipalPage;
