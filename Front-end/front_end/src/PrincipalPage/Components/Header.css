@@ -1,1 +1,5 @@
-
+section{
+    background-image: url(../Images/home.jpg);
+    background-size: cover;
+    opacity: unset;
+}
