@@ -4,9 +4,9 @@ import Auth from "./Auth";
 
 const Navbar = () => {
   let Links = [
-    { name: "Home", link: "/", id: 1 },
-    { name: "About Us", link: "/", id: 2 },
-    { name: "Contact Us", link: "/", id: 3 },
+    { name: "Home", link: "#Hero", id: 1 },
+    { name: "About Us", link: "#About", id: 2 },
+    { name: "Contact Us", link: "#Contact", id: 3 },
     { name: "Home", link: "/", id: 4 },
     { name: "Home", link: "/", id: 5 },
   ];
