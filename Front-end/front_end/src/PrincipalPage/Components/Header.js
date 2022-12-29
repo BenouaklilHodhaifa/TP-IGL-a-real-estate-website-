@@ -8,7 +8,7 @@ import { FiMenu } from "react-icons/fi";
 import Navbar from "./Navbar";
 
 const Header = () => (
-  <section className="h-[752px]">
+  <section className="h-[752px]" id="Hero">
     <div className="w-full h-[80px] flex flex-row items-center justify-between px-8">
       <div className="flex flex-row gap-2 max-w-[250px]">
         <AiOutlineMail size={25} />
