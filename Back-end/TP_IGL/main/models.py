@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from datetime import datetime
 
 
 class UserAccountManager(BaseUserManager):
@@ -42,3 +43,32 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+class AI(models.Model):
+    x = [
+        ("Terrain", "Terrain"),
+        ("Terrain_Agricole", "Terrain Agricole"),
+        ("Appartement", "Appartement"),
+        ("Maison", "Maison"),
+        ("Bungalow", "Bungalow")
+    ]
+    y = [
+        ("Vente", "Vente"),
+        ("Echange", "Echange"),
+        ("Location", "Location")
+    ]
+    titre = models.CharField(max_length=50)
+    description = models.CharField(max_length=50)
+    data_Publication = models.DateTimeField(default=datetime.now)
+    type_ai = models.CharField(max_length=50, choices=x)
+    category = models.CharField(max_length=50, choices=y)
+    surface = models.DecimalField(max_digits=10, decimal_places=2)
+    prix = models.DecimalField(max_digits=10, decimal_places=2)
+    information_name = models.CharField(max_length=50)
+    information_tel = models.IntegerField()
+    information_email = models.CharField(max_length=50)
+    images = models.ImageField(upload_to='img')
+
+    def __str__(self):
+        return self.titre
