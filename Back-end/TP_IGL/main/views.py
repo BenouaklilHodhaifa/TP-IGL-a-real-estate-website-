@@ -23,8 +23,13 @@ class GoogleView(APIView):
     def post(self, request):
         payload = {'access_token': request.data.get(
             "token")}  # validate the token
+
+        # r = requests.get(
+        #    'https://www.googleapis.com/oauth2/v2/userinfo', params=payload)
+        id_token = request.data.get("token")
         r = requests.get(
-            'https://www.googleapis.com/oauth2/v2/userinfo', params=payload)
+            f'https://www.googleapis.com/oauth2/v3/tokeninfo/?id_token={id_token}')
+
         data = json.loads(r.text)
 
         if 'error' in data:
@@ -41,7 +46,8 @@ class GoogleView(APIView):
             # provider random default password
             user.password = make_password(
                 BaseUserManager().make_random_password())
-            user.email = data['email']
+            user.first_name = data["given_name"]
+            user.last_name = data["family_name"]
             user.save()
 
         # generate token without username & password
