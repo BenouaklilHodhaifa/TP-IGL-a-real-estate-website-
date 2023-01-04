@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from datetime import datetime
+import uuid
 
 
 class UserAccountManager(BaseUserManager):
@@ -56,3 +58,53 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+class AI(models.Model):
+    x = [
+        ("Terrain", "Terrain"),
+        ("Terrain_Agricole", "Terrain Agricole"),
+        ("Appartement", "Appartement"),
+        ("Maison", "Maison"),
+        ("Bungalow", "Bungalow")
+    ]
+    y = [
+        ("Vente", "Vente"),
+        ("Echange", "Echange"),
+        ("Location", "Location")
+    ]
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    titre = models.CharField(max_length=50)
+    description = models.TextField()
+    date_Publication = models.DateTimeField(default=datetime.now)
+    type_ai = models.CharField(max_length=50, choices=x)
+    category = models.CharField(max_length=50, choices=y)
+    surface = models.DecimalField(max_digits=10, decimal_places=2)
+    prix = models.DecimalField(max_digits=10, decimal_places=2)
+    information_name = models.CharField(max_length=50)
+    information_tel = models.IntegerField()
+    information_email = models.CharField(max_length=50)
+    image = models.ImageField(upload_to='img')
+
+    user = models.ForeignKey(
+        UserAccount, on_delete=models.CASCADE, related_name='ais', null=True, blank=True)
+
+    def __str__(self):
+        return self.titre
+
+
+class AiImage(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    ai = models.ForeignKey(AI, on_delete=models.CASCADE, related_name="images")
+    image = models.ImageField(
+        upload_to="img", default="", null=True, blank=True)
+
+
+class Message(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name_ai = models.CharField(max_length=50)
+    name_sender = models.CharField(max_length=50)
+    vue = models.BooleanField(default=False)
+    body = models.TextField()
+    user = models.ForeignKey(
+        UserAccount, on_delete=models.CASCADE, related_name='messages', null=True, blank=True)

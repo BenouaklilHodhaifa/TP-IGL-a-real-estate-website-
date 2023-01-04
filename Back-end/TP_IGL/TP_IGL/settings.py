@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main',
+    'main.apps.MainConfig',
     'rest_framework',
     'djoser',
     # google
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -149,6 +150,8 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+# setting about rest api fremwork
+
 REST_FRAMEWORK = {
     # 'DEFAULT_PERMISSION_CLASSES': [
     # the user must be authenticated to use any view in our app
@@ -159,6 +162,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',  # added this
     ),
 }
+
+# isAuthenticated || AllowANy || IsAdminuser || IsAuthenticatedReadOnly
+
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',  # for social auth
@@ -212,3 +218,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # we're going to use this user model in our app
 AUTH_USER_MODEL = 'main.UserAccount'
+
+# media
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_URL = '/media/'
