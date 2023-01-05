@@ -73,14 +73,56 @@ class GoogleView(APIView):
         return Response(response)
 
 
-class AiViewSet(ModelViewSet):
-    queryset = AI.objects.all()
-    serializer_class = AISerializer
+# class AiViewSet(ModelViewSet):
+#     queryset = AI.objects.all()
+#     serializer_class = AISerializer
 
-    # parser_classes = (MultiPartParser, FormParser)
 
-    # filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    # filterset_class = ProductFilter
-    # search_fields = ['name', 'description']
-    # ordering_fields = ['old_price']
-    # pagination_class = PageNumberPagination
+@api_view(['POST'])
+def create_ai(request):
+    serializer = AISerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class AI_Function(APIView):
+    def get(self, request):
+        ais = AI.objects.all()
+        serializer = AISerializer(ais, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = AISerializer(data=request.data)
+        if (serializer.is_valid()):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AI_Function_Id(APIView):
+    def get_object(self, id):
+        try:
+            return AI.objects.get(id=id)
+        except AI.DoesNotExist:
+            raise Http404
+
+    def delete(self, request, id):
+        ais = self.get_object(id)
+        ais.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def put(self, request, id):
+        ais = self.get_object(id)
+        serializer = AISerializer(ais, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, id):
+        ais = self.get_object(id)
+        serializer = AISerializer(ais)
+        return Response(serializer.data)

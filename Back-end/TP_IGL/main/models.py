@@ -73,7 +73,8 @@ class AI(models.Model):
         ("Echange", "Echange"),
         ("Location", "Location")
     ]
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # PK auto generated
     titre = models.CharField(max_length=50)
     description = models.TextField()
     date_Publication = models.DateTimeField(default=datetime.now)
@@ -81,10 +82,10 @@ class AI(models.Model):
     category = models.CharField(max_length=50, choices=y)
     surface = models.DecimalField(max_digits=10, decimal_places=2)
     prix = models.DecimalField(max_digits=10, decimal_places=2)
-    information_name = models.CharField(max_length=50)
-    information_tel = models.IntegerField()
-    information_email = models.CharField(max_length=50)
-    image = models.ImageField(upload_to='img')
+    information_tel = models.CharField(max_length=30)
+    # we can replace this by EmailField
+    information_email = models.EmailField()
+    # image = models.ImageField(upload_to='img')
 
     user = models.ForeignKey(
         UserAccount, on_delete=models.CASCADE, related_name='ais', null=True, blank=True)
@@ -94,17 +95,20 @@ class AI(models.Model):
 
 
 class AiImage(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    ai = models.ForeignKey(AI, on_delete=models.CASCADE, related_name="images")
-    image = models.ImageField(
-        upload_to="img", default="", null=True, blank=True)
+    # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    ai = models.ForeignKey(AI, on_delete=models.CASCADE,
+                           related_name="images", null=True, blank=True)
+    image = models.ImageField(upload_to="img", null=True, blank=True)
 
 
 class Message(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name_ai = models.CharField(max_length=50)
-    name_sender = models.CharField(max_length=50)
+    # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     vue = models.BooleanField(default=False)
     body = models.TextField()
-    user = models.ForeignKey(
-        UserAccount, on_delete=models.CASCADE, related_name='messages', null=True, blank=True)
+    # On delete CASCADE is Dangerous here because when you delete a message yoy will delete the User !!!
+    user_reciever = models.ForeignKey(
+        UserAccount, on_delete=models.CASCADE, related_name='messages_recieved', null=True, blank=True)
+    user_sender = models.ForeignKey(
+        UserAccount, on_delete=models.SET_NULL, related_name='messages_sent', null=True, blank=True)
+    ai = models.ForeignKey(
+        AI, on_delete=models.CASCADE, related_name='messages', null=True, blank=True)

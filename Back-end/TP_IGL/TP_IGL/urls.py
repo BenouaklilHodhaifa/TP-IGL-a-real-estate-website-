@@ -33,7 +33,8 @@ urlpatterns = [
     path('auth/', include('djoser.social.urls')),  # google
     path('google/', views.GoogleView.as_view(), name='google'),
     path('hello/', views.HelloView.as_view(), name='hello'),
-    path('main/', include('main.urls'))
+    path('create_ai/', views.create_ai, name='create_ai'),
+    # path('main/', include('main.urls'))
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += [
