@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'main.apps.MainConfig',
     'rest_framework',
     'djoser',
+    'corsheaders',  # to allow CORS (Cross-Origin Resource Sharing)
     # google
     'social_django',
     'rest_framework_simplejwt',
@@ -53,8 +54,11 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE = [
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # to allow CORS (Cross-Origin Resource Sharing)
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -222,3 +226,5 @@ AUTH_USER_MODEL = 'main.UserAccount'
 # media
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_URL = '/media/'
+
+CORS_ORIGIN_ALLOW_ALL = True  # to allow CORS (Cross-Origin Resource Sharing)

@@ -23,6 +23,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 # from django.contrib.auth.models import User
 from .models import UserAccount
+from rest_framework.parsers import JSONParser
+from django.db.models import Q
 
 
 class HelloView(APIView):
@@ -46,7 +48,7 @@ class GoogleView(APIView):
 
         data = json.loads(r.text)
 
-        if 'error' in data:
+        if 'error' in r.text:
             content = {
                 'message': 'wrong google token / this google token is already expired.'}
             return Response(content)
@@ -126,3 +128,83 @@ class AI_Function_Id(APIView):
         ais = self.get_object(id)
         serializer = AISerializer(ais)
         return Response(serializer.data)
+
+
+class AI_list(APIView):
+    """List all the AI's or create a new one"""
+
+    def get(self, request):
+        """Get AI list ordered by the most recent"""
+
+        # they are already ordered because we mentioned that in Meta class in AI
+        ais = AI.objects.all()
+        serializer = AISerializer(ais, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    def post(self, request):
+        serializer = AISerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AI_detail(APIView):
+    """"Retrieve, update or delete an AI."""
+
+    def get_object(self, pk):
+        try:
+            return AI.objects.get(pk=pk)
+        except AI.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        ai = self.get_object(pk)
+        serializer = AISerializer(ai)
+        return JsonResponse(serializer.data)
+
+    def put(self, request, pk):
+        ai = self.get_object(pk)
+        serializer = AISerializer(ai, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        ai = self.get_object(pk)
+        user_email = request.user
+        user = UserAccount.objects.get(email=user_email)
+        ai_user = UserAccount.objects.get(email=ai.user)
+        if (user.id != ai_user.id):
+            response = {}
+            response["details"] = "this AI doesn't belong to this user"
+            return JsonResponse(data=response, status=status.HTTP_401_UNAUTHORIZED)
+        ai.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+
+class AiSearch(APIView):
+    def get(self, request):
+        queryset_all = AI.objects.all()
+        key_words = request.data["key_words"]
+        key_words = key_words.split()
+        result = AI.objects.none()  # empty queryset
+        for word in key_words:
+            # search and exclude the querysets that doesn't have "word"
+            queryset = queryset_all.exclude(
+                ~Q(titre__icontains=word) & ~Q(description__icontains=word))
+            result = result | queryset  # join the results
+        serializer = AISerializer(result, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+
+class AiUser(APIView):
+    """"unable user from seeing his own AIs"""
+
+    def get(self, request):
+        user_email = request.user
+        user = UserAccount.objects.get(email=user_email)
+        queryset = AI.objects.filter(user=user.id)
+        serializer = AISerializer(queryset, many=True)
+        return JsonResponse(serializer.data, safe=False)

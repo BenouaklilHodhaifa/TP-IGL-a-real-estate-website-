@@ -93,6 +93,9 @@ class AI(models.Model):
     def __str__(self):
         return self.titre
 
+    class Meta:
+        ordering = ['date_Publication']
+
 
 class AiImage(models.Model):
     # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
