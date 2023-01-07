@@ -89,6 +89,7 @@ class AI(models.Model):
     information_email = models.EmailField()
     information_nom = models.CharField(max_length=50, default="")
     information_prenom = models.CharField(max_length=50, default="")
+    information_adresse = models.CharField(max_length=255, default="")
     # image = models.ImageField(upload_to='img')
 
     user = models.ForeignKey(

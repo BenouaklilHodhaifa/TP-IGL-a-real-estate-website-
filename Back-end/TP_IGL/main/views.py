@@ -208,3 +208,25 @@ class AiUser(APIView):
         queryset = AI.objects.filter(user=user.id)
         serializer = AISerializer(queryset, many=True)
         return JsonResponse(serializer.data, safe=False)
+
+
+class AiFilter(APIView):
+    """"Filter search results by Type, wilaya, commune, periode entre deux dates de publication"""
+
+    def get(self, request):
+        queryset = AI.objects.all()
+        if (request.data["by_type"] == True):
+            queryset = queryset.filter(type_ai=request.data["type"])
+
+        if (request.data["by_wilaya"] == True):
+            queryset = queryset.filter(wilaya=request.data["wilaya"])
+
+        if (request.data["by_commune"] == True):
+            queryset = queryset.filter(commune=request.data["commune"])
+
+        if (request.data["by_periode"] == True):
+            queryset = queryset.filter(date_Publication__gte=request.data["date1"],
+                                       date_Publication__lte=request.data["date2"])
+
+        serializer = AISerializer(queryset, many=True)
+        return JsonResponse(serializer.data, safe=False)
