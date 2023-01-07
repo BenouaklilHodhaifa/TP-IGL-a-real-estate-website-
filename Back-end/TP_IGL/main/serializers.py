@@ -28,7 +28,8 @@ class AISerializer(serializers.ModelSerializer):
     class Meta:
         model = AI
         fields = ['id', 'titre', 'description', 'date_Publication', 'type_ai', 'category', 'surface',
-                  'prix', 'information_tel', 'information_email', 'user', 'images', 'uploaded_images']
+                  'prix', 'wilaya', 'commune', 'adresse_ai', 'information_tel', 'information_email',
+                  'information_nom', 'information_prenom', 'user', 'images', 'uploaded_images']
 
     def create(self, validated_data):
         uploaded_images = validated_data.pop("uploaded_images")

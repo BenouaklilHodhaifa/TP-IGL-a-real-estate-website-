@@ -82,9 +82,13 @@ class AI(models.Model):
     category = models.CharField(max_length=50, choices=y)
     surface = models.DecimalField(max_digits=10, decimal_places=2)
     prix = models.DecimalField(max_digits=10, decimal_places=2)
+    wilaya = models.CharField(max_length=50, default="")
+    commune = models.CharField(max_length=50, default="")
+    adresse_ai = models.CharField(max_length=255, default="")
     information_tel = models.CharField(max_length=30)
-    # we can replace this by EmailField
     information_email = models.EmailField()
+    information_nom = models.CharField(max_length=50, default="")
+    information_prenom = models.CharField(max_length=50, default="")
     # image = models.ImageField(upload_to='img')
 
     user = models.ForeignKey(
