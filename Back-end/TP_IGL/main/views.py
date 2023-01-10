@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 from django.http.response import JsonResponse
-from .models import AI
+from .models import AI, Message
 from rest_framework.decorators import api_view
 from .serializers import AISerializer, MessageSerializer
 from rest_framework import status, filters
@@ -235,9 +235,23 @@ class AiFilter(APIView):
 class Messages(APIView):
 
     def get(self, request):
-        pass
+        """"Get all the messages which isn't viewed yet"""
+
+        user_email = request.user
+        user = UserAccount.objects.get(email=user_email)
+        non_viewed_messages = set()
+        for message in user.messages_recieved.all():
+            if (message.vue == False):
+                non_viewed_messages.add(message.id)
+
+        response = Message.objects.filter(pk__in=non_viewed_messages)
+        serializer = MessageSerializer(response, many=True)
+
+        return Response(data=serializer.data)
 
     def post(self, request, id_ai):
+        """"send message to a user ai ID is in the URL"""
+
         user_reciever_email = AI.objects.get(pk=id_ai).user
         serializer = MessageSerializer(
             data=request.data,
@@ -250,3 +264,19 @@ class Messages(APIView):
             serializer.save()
             return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, id):
+        """"Mark this message as viewd (id in URL)"""
+        # check if the user who sent this is the reciever
+        user_email = request.user
+        user_request = UserAccount.objects.get(email=user_email)
+
+        message = Message.objects.get(id=id)
+        user_owner = message.user_reciever
+
+        if (user_request.id != user_owner.id):  # the message doesn't belong to him
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        message.vue = True
+        message.save()
+        return Response(status=200)

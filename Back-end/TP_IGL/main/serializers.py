@@ -43,7 +43,7 @@ class AISerializer(serializers.ModelSerializer):
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
-        fields = ['vue', 'body', 'user_reciever', 'user_sender', 'ai']
+        fields = ['id', 'vue', 'body', 'user_reciever', 'user_sender', 'ai']
 
     def create(self, validated_data):
         message = Message.objects.create(**validated_data)
