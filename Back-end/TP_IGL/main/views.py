@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.http.response import JsonResponse
 from .models import AI
 from rest_framework.decorators import api_view
-from .serializers import AISerializer
+from .serializers import AISerializer, MessageSerializer
 from rest_framework import status, filters
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -230,3 +230,23 @@ class AiFilter(APIView):
 
         serializer = AISerializer(queryset, many=True)
         return JsonResponse(serializer.data, safe=False)
+
+
+class Messages(APIView):
+
+    def get(self, request):
+        pass
+
+    def post(self, request, id_ai):
+        user_reciever_email = AI.objects.get(pk=id_ai).user
+        serializer = MessageSerializer(
+            data=request.data,
+            context={
+                "ai": id_ai,
+                "user_reciever_email": user_reciever_email,
+            }
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

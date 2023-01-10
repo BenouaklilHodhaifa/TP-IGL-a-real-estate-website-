@@ -38,6 +38,7 @@ urlpatterns = [
     path('ai/search/', views.AiSearch.as_view(), name='ai_search'),
     path('ai/mine/', views.AiUser.as_view(), name='ai_user'),
     path('ai/filter/', views.AiFilter.as_view(), name='ai_filter'),
+    path('ai/<int:id_ai>/message/', views.Messages.as_view(), name='massages'),
     # path('main/', include('main.urls'))
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

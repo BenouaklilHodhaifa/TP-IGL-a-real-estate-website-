@@ -40,6 +40,20 @@ class AISerializer(serializers.ModelSerializer):
         return ai
 
 
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ['vue', 'body', 'user_reciever', 'user_sender', 'ai']
+
+    def create(self, validated_data):
+        message = Message.objects.create(**validated_data)
+        message.ai = AI.objects.get(id=self.context.get("ai"))
+        message.user_reciever = UserAccount.objects.get(
+            email=self.context.get("user_reciever_email"))
+        message.save()
+        return message
+
+
 class UserCreateSerializer(UserCreateSerializer):
     # ais = AISerializer(many=True, read_only=True)
     # uploaded_ais = serializers.ListField(
