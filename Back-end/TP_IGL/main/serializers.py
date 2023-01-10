@@ -21,7 +21,7 @@ class MessageSerializer(serializers.ModelSerializer):
 class AISerializer(serializers.ModelSerializer):
     images = AiImageSerializer(many=True, read_only=True)
     uploaded_images = serializers.ListField(
-        child=serializers.ImageField(
+        child=serializers.FileField(
             max_length=1000000, allow_empty_file=False, use_url=False),
         write_only=True)
 
@@ -38,6 +38,20 @@ class AISerializer(serializers.ModelSerializer):
             ai_image = AiImage.objects.create(
                 ai=ai, image=image)
         return ai
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ['id', 'vue', 'body', 'user_reciever', 'user_sender', 'ai']
+
+    def create(self, validated_data):
+        message = Message.objects.create(**validated_data)
+        message.ai = AI.objects.get(id=self.context.get("ai"))
+        message.user_reciever = UserAccount.objects.get(
+            email=self.context.get("user_reciever_email"))
+        message.save()
+        return message
 
 
 class UserCreateSerializer(UserCreateSerializer):
