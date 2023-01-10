@@ -106,8 +106,9 @@ class AiImage(models.Model):
     # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     ai = models.ForeignKey(AI, on_delete=models.CASCADE,
                            related_name="images", null=True, blank=True)
-    image = models.ImageField(upload_to="img", null=True, blank=True)
-
+    
+    image = models.FileField(upload_to="img", null=True, blank=True)
+    
 
 class Message(models.Model):
     # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
