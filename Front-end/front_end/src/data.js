@@ -54,28 +54,29 @@ import Agent10 from './assets/img/agents/agent10.png';
 import Agent11 from './assets/img/agents/agent11.png';
 import Agent12 from './assets/img/agents/agent12.png';
 
+import home from './assets/home.jpg'
+
 export const housesData = [
   {
-    id: 1,
-    type: 'House',
-    name: 'House 1',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet, illoat. Repudiandae ratione impedit delectus consectetur. Aspernaturvero obcaecati placeat ab distinctio unde ipsam molestias atqueratione delectus blanditiis nemo eius dignissimos doloremque quaealiquid maiores id tempore consequatur, quod pariatur saepe.',
-    image: House1,
-    imageLg: House1Lg,
-    country: 'United States',
-    address: '7240C Argyle St. Lawndale, CA 90260',
-    bedrooms: '6',
-    bathrooms: '3',
-    surface: '4200 sq ft',
-    year: '2016',
-    price: '110000',
-    agent: {
-      image: Agent1,
-      name: 'Patricia Tullert',
-      phone: '0123 456 78910',
-    },
-  },
+    id:1,
+    titre:"Ai 6",
+    description:"annonce 6",
+    date_Publication:"2023-01-07T19:32:34Z",
+    type_ai:"Terrain_Agricole",
+    category:"Location",
+    surface:"70",
+    prix:"60",
+    wilaya:"Blida",
+    commune:"Beni Mared",
+    adresse_ai:"adresse 123456",
+    information_tel:"054665655",
+    information_email:"example4@email.com",
+    information_nom:"John1",
+    information_prenom:"Doe1",
+    information_adresse:"adresse user 123",
+    user:"2",
+    uploaded_images:home,
+},
   {
     id: 2,
     type: 'House',
