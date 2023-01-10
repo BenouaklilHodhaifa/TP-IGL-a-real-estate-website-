@@ -21,7 +21,7 @@ class MessageSerializer(serializers.ModelSerializer):
 class AISerializer(serializers.ModelSerializer):
     images = AiImageSerializer(many=True, read_only=True)
     uploaded_images = serializers.ListField(
-        child=serializers.ImageField(
+        child=serializers.FileField(
             max_length=1000000, allow_empty_file=False, use_url=False),
         write_only=True)
 
