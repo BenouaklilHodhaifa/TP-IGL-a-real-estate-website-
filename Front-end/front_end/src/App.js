@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Router, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Ai from "./Components/Ai";
 import { housesData } from "./data";
 import LandingPage from "./pages/LandingPage";
@@ -11,8 +11,8 @@ function App() {
   return (
     <div>
       <Routes>
-        <Route exact path="/" element={<LandingPage />}></Route>
-        <Route exact path="/user" element={<UserPage />}></Route>
+        <Route path="/" element={<LandingPage />}></Route>
+        <Route path="/user" element={<UserPage />}></Route>
       </Routes>
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { AiOutlineUser, AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 const Navuser = () => {
   let Links = [
@@ -10,6 +11,10 @@ const Navuser = () => {
   ];
 
   let [Open, setOpen] = useState(false);
+  const navigation = useNavigate();
+  const Logout = () => {
+    navigation("/");
+  };
 
   return (
     <div className="shadow-md w-full sticky left-0  md:w-auto">
@@ -41,6 +46,12 @@ const Navuser = () => {
               </a>
             </li>
           ))}
+          <button
+            onClick={() => Logout()}
+            className="w-[100px] h-10 bg-slate-500 text-stone-900 font-bold"
+          >
+            Logout
+          </button>
         </ul>
       </div>
     </div>
