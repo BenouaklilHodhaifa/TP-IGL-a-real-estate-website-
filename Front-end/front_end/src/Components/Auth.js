@@ -2,8 +2,10 @@ import React from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import { useNavigation } from "react-router-dom";
 
 const Auth = () => {
+  const navigation = useNavigation();
   return (
     <div>
       <GoogleOAuthProvider clientId="699323224027-gn9judmftsjiuqdg3ttb73pj9ghiambq.apps.googleusercontent.com">
@@ -22,6 +24,7 @@ const Auth = () => {
                   },
                 }
               );
+              navigation("/user");
               console.log(res);
             } catch (err) {
               console.log(err);

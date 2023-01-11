@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { AiOutlineUser, AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 
-const Navigation = () => {
+const Navuser = () => {
   let Links = [
     { name: "Submit an ad", link: "/", id: 1 },
     { name: "Search an ad", link: "/", id: 2 },
@@ -47,4 +47,4 @@ const Navigation = () => {
   );
 };
 
-export default Navigation;
+export default Navuser;
