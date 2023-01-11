@@ -14,6 +14,8 @@ const Navuser = () => {
   const navigation = useNavigate();
   const Logout = () => {
     navigation("/");
+    localStorage.setItem("Recent_token", null);
+    localStorage.setItem("Recent_user", null);
   };
 
   return (
@@ -23,7 +25,7 @@ const Navuser = () => {
           <div className="text-3xl text-indigo-300 mr-1 pt-2">
             <AiOutlineUser size={40} />
           </div>
-          <div className="pt-2">User name</div>
+          <div className="pt-2">{localStorage.getItem("Recent_user")}</div>
         </div>
         <div
           onClick={() => setOpen(!Open)}
@@ -48,7 +50,7 @@ const Navuser = () => {
           ))}
           <button
             onClick={() => Logout()}
-            className="w-[100px] h-10 bg-slate-500 text-stone-900 font-bold"
+            className="w-[100px] h-10 bg-slate-500 text-stone-900 font-bold md:ml-5"
           >
             Logout
           </button>

@@ -3,6 +3,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import jwt_decode from "jwt-decode";
 
 const Auth = () => {
   const navigation = useNavigate();
@@ -12,10 +13,10 @@ const Auth = () => {
         <GoogleLogin
           onSuccess={async (Response) => {
             const token = Response.credential;
-
+            const decoded = jwt_decode(token);
             try {
               const res = axios.post(
-                "http://127.0.0.1:3000/google/",
+                "http://127.0.0.1:8000/google/",
                 {
                   token,
                 },
@@ -27,6 +28,11 @@ const Auth = () => {
               );
 
               console.log((await res).data.access_token);
+              localStorage.setItem(
+                "Recent_token",
+                (await res).data.access_token
+              );
+              localStorage.setItem("Recent_user", decoded.name);
               navigation("/user");
             } catch (err) {
               console.log(err);
