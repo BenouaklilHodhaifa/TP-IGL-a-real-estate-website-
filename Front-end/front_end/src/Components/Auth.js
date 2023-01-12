@@ -30,7 +30,9 @@ const Auth = () => {
               console.log((await res).data.access_token);
               localStorage.setItem(
                 "Recent_token",
-                (await res).data.access_token
+                JSON.stringify({
+                  token: (await res).data.access_token,
+                })
               );
               localStorage.setItem("Recent_user", decoded.name);
               navigation("/user");
