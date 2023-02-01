@@ -20,22 +20,17 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 import requests
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 # from django.contrib.auth.models import User
 from .models import UserAccount
 from rest_framework.parsers import JSONParser
 from django.db.models import Q
 
 
-class HelloView(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request):
-        content = {'message': 'Hello, World!'}
-        return Response(content)
-
-
 class GoogleView(APIView):
+
+    permission_classes = (AllowAny,)
+
     def post(self, request):
         payload = {'access_token': request.data.get(
             "token")}  # validate the token
@@ -69,65 +64,11 @@ class GoogleView(APIView):
         # generate token without username & password
         token = RefreshToken.for_user(user)
         response = {}
-        response['username'] = user.email  # this was user.username
+        response["user_id"] = user.id
+        response['username'] = user.email
         response['access_token'] = str(token.access_token)
         response['refresh_token'] = str(token)
         return Response(response)
-
-
-# class AiViewSet(ModelViewSet):
-#     queryset = AI.objects.all()
-#     serializer_class = AISerializer
-
-
-@api_view(['POST'])
-def create_ai(request):
-    serializer = AISerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    else:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
-class AI_Function(APIView):
-    def get(self, request):
-        ais = AI.objects.all()
-        serializer = AISerializer(ais, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def post(self, request):
-        serializer = AISerializer(data=request.data)
-        if (serializer.is_valid()):
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
-
-
-class AI_Function_Id(APIView):
-    def get_object(self, id):
-        try:
-            return AI.objects.get(id=id)
-        except AI.DoesNotExist:
-            raise Http404
-
-    def delete(self, request, id):
-        ais = self.get_object(id)
-        ais.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def put(self, request, id):
-        ais = self.get_object(id)
-        serializer = AISerializer(ais, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def get(self, request, id):
-        ais = self.get_object(id)
-        serializer = AISerializer(ais)
-        return Response(serializer.data)
 
 
 class AI_list(APIView):
@@ -280,3 +221,64 @@ class Messages(APIView):
         message.vue = True
         message.save()
         return Response(status=200)
+
+
+############   ADDITIONAL   ##############
+
+
+class HelloView(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request):
+        content = {'message': 'Hello, World!'}
+        return Response(content, status=200)
+
+
+class AI_Function_Id(APIView):
+    def get_object(self, id):
+        try:
+            return AI.objects.get(id=id)
+        except AI.DoesNotExist:
+            raise Http404
+
+    def delete(self, request, id):
+        ais = self.get_object(id)
+        ais.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def put(self, request, id):
+        ais = self.get_object(id)
+        serializer = AISerializer(ais, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, id):
+        ais = self.get_object(id)
+        serializer = AISerializer(ais)
+        return Response(serializer.data)
+
+
+@api_view(['POST'])
+def create_ai(request):
+    serializer = AISerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class AI_Function(APIView):
+    def get(self, request):
+        ais = AI.objects.all()
+        serializer = AISerializer(ais, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = AISerializer(data=request.data)
+        if (serializer.is_valid()):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
