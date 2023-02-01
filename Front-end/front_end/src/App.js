@@ -24,6 +24,7 @@ function App() {
       children
     );
   };
+  console.log(housesData[0]);
 
   return (
     <div>
@@ -37,7 +38,8 @@ function App() {
             <Route path={"Ajouter"} element={<AjouterAi />} />
           </Route>
         </Routes>
-      </ProtectRoutes>
+  </ProtectRoutes>
+    {/*<Ai annonce={housesData[0]}/>*/}
     </div>
   );
 }
