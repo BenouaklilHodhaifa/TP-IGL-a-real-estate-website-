@@ -4,10 +4,9 @@ import { useNavigate } from "react-router-dom";
 
 const Navuser = () => {
   let Links = [
-    { name: "Submit an ad", link: "/", id: 1 },
-    { name: "Search an ad", link: "/", id: 2 },
-    { name: "view posted ads", link: "/", id: 3 },
-    { name: "Messages", link: "/", id: 4 },
+    { name: "Submit an ad", link: "Ajouter", id: 1 },
+    { name: "Search an add", link: "Search", id: 2 },
+    { name: "Messages", link: "message", id: 3 },
   ];
 
   let [Open, setOpen] = useState(false);
@@ -21,11 +20,18 @@ const Navuser = () => {
   return (
     <div className="shadow-md w-full sticky left-0  md:w-auto">
       <div className="md:flex items-center justify-between py-4 md:px-4 px-7">
-        <div className="font-bold text-2xl cursor-pointer flex items-center justify-start font-[poppins] text-gray-800">
-          <div className="text-3xl text-indigo-300 mr-1 pt-2">
+        <div className="font-bold text-2xl cursor-pointer flex items-center justify-start  font-[poppins] text-gray-800">
+          <div
+            className="text-3xl text-indigo-500 mr-1 pt-2"
+            onClick={() => {
+              navigation("/");
+            }}
+          >
             <AiOutlineUser size={40} />
           </div>
-          <div className="pt-2">{localStorage.getItem("Recent_user")}</div>
+          <div className="lowercase mt-3">
+            {localStorage.getItem("Recent_user")}
+          </div>
         </div>
         <div
           onClick={() => setOpen(!Open)}
@@ -39,13 +45,14 @@ const Navuser = () => {
           }`}
         >
           {Links.map((link) => (
-            <li key={link.id} className="md:ml-8 text-xl md:my-0 my-7">
-              <a
-                href={link.link}
-                className="text-gray-600 hover:border-b-4 duration-500"
-              >
-                {link.name}
-              </a>
+            <li
+              key={link.id}
+              className="md:ml-8 text-xl md:my-0 my-7 cursor-pointer"
+              onClick={() => {
+                navigation(link.link);
+              }}
+            >
+              {link.name}
             </li>
           ))}
           <button

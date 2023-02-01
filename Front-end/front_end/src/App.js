@@ -7,6 +7,9 @@ import UserPage from "./pages/UserPage";
 import { useLocation, Navigate } from "react-router-dom";
 import Messages from "./Components/Messages";
 import Adds from "./Components/Adds";
+import AjouterAi from "./Components/AjouterAi";
+import SearchAi from "./Components/SearchAi";
+import axios from "axios";
 
 function App() {
   const { pathname } = useLocation();
@@ -21,14 +24,17 @@ function App() {
       children
     );
   };
+
   return (
     <div>
       <ProtectRoutes>
         <Routes>
-          <Route path="/" element={<LandingPage />}></Route>
+          <Route path="/" element={<LandingPage />} />
           <Route path="/user" element={<UserPage />}>
             <Route index element={<Adds />} />
             <Route path={"message"} element={<Messages />} />
+            <Route path={"Search"} element={<SearchAi />} />
+            <Route path={"Ajouter"} element={<AjouterAi />} />
           </Route>
         </Routes>
       </ProtectRoutes>
