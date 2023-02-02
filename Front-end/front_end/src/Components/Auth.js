@@ -35,6 +35,12 @@ const Auth = () => {
                 })
               );
               localStorage.setItem("Recent_user", decoded.name);
+              localStorage.setItem(
+                "Recent_id",
+                JSON.stringify({
+                  id: (await res).data.user_id,
+                })
+              );
               navigation("/user");
             } catch (err) {
               console.log(err);

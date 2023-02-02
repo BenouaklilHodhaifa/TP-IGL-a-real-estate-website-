@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useState } from "react";
 
 const Form = () => {
+  const id = JSON.parse(localStorage.getItem("Recent_id"))?.id;
   const [titre, setTitre] = useState("");
   const [description, setDescription] = useState("");
   const [date_Publication, setDate_Publication] = useState("");
@@ -18,22 +19,18 @@ const Form = () => {
   const [information_nom, setInformation_nom] = useState("");
   const [information_prenom, setInformation_prenom] = useState("");
   const [information_adresse, setInformation_adresse] = useState("");
-  const [user, setUser] = useState("1");
+  const [user, setUser] = useState(id);
   const [uploadedimages, setUploadedimages] = useState([]);
-
+  const token = JSON.parse(localStorage.getItem("Recent_token"))?.token;
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(typeai);
-    let file_datas = [];
-    // for (let i = 0; i < uploadedimages.length; i++) {
-    let form = new FormData();
-    form.append("Body", uploadedimages[0]);
-    // console.log(uploadedimages[0]);
-    // file_datas.push(form);
-    file_datas.push(form);
-    console.log(file_datas);
-    //   file_datas.push(form);
-    // }
+    const file_datas = [];
+    uploadedimages.map((e) => {
+      const formData = new FormData();
+      formData.append("file", e);
+      console.log(formData);
+      file_datas.push(formData);
+    });
 
     const data = {
       titre: titre,
@@ -51,30 +48,16 @@ const Form = () => {
       information_nom: information_nom,
       information_prenom: information_prenom,
       information_adresse: information_adresse,
-      user: "1",
-      uploaded_images: file_datas,
+      user: user,
+      uploaded_images: [],
     };
-    // {
-    //   titre: titre,
-    //   description: description,
-    //   typeai: "Terrain_Agricole",
-    //   category: "Location",
-    //   surface: surface,
-    //   prix: prix,
-    //   wilaya: wilaya,
-    //   commune: commune,
-    //   adresse_ai: adresse_ai,
-    //   information_tel: information_tel,
-    //   information_email: information_email,
-    //   information_nom: information_nom,
-    //   information_prenom: information_prenom,
-    //   information_adresse: information_adresse,
-    //   user: "1",
-    //   uploadedimages: [],
-    // };
 
     try {
-      const rr = await axios.post("http://127.0.0.1:8000/ai/", data);
+      const rr = await axios.post("http://127.0.0.1:8000/ai/", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       alert("islamkmak");
     } catch (err) {
       console.log(err);
@@ -98,6 +81,7 @@ const Form = () => {
           className="w-full border border-gray-400 p-2 rounded-lg"
           id="information_nom"
           type={"text"}
+          required
           value={information_nom}
           onChange={(e) => setInformation_nom(e.target.value)}
         />
