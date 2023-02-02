@@ -91,6 +91,7 @@ class AI_list(APIView):
 
 
 class AI_detail(APIView):
+
     """"Retrieve, update or delete an AI."""
 
     def get_object(self, pk):
@@ -114,7 +115,7 @@ class AI_detail(APIView):
 
     def delete(self, request, pk):
         ai = self.get_object(pk)
-        user_email = request.user
+        user_email = request.user.email
         user = UserAccount.objects.get(email=user_email)
         ai_user = UserAccount.objects.get(email=ai.user)
         if (user.id != ai_user.id):
@@ -126,7 +127,8 @@ class AI_detail(APIView):
 
 
 class AiSearch(APIView):
-    def get(self, request):
+
+    def post(self, request):
         queryset_all = AI.objects.all()
         key_words = request.data["key_words"]
         key_words = key_words.split()
@@ -154,7 +156,7 @@ class AiUser(APIView):
 class AiFilter(APIView):
     """"Filter search results by Type, wilaya, commune, periode entre deux dates de publication"""
 
-    def get(self, request):
+    def post(self, request):
         queryset = AI.objects.all()
         if (request.data["by_type"] == True):
             queryset = queryset.filter(type_ai=request.data["type"])

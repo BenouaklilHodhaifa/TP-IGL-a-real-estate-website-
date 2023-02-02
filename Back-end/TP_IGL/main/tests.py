@@ -2,6 +2,9 @@ from datetime import datetime
 from django.test import TestCase, Client
 from django.urls import reverse
 from .models import AI, UserAccount
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.hashers import make_password
 
 
 class MyAppViewTests(TestCase):
@@ -15,8 +18,14 @@ class AI_Function_IdTestCase(TestCase):
     def setUp(self):
         self.client = Client()
 
-        self.user = UserAccount.objects.create_user(
-            password='testpassword', email='test@mail.com')
+        self.user = UserAccount()
+        self.user.email = 'test@email.com'
+
+        self.user.password = make_password(
+            BaseUserManager().make_random_password())
+        self.user.first_name = "Jhon"
+        self.user.last_name = 'Doe'
+        self.user.save()
 
         self.ais = AI.objects.create(
             user=self.user,
@@ -38,10 +47,13 @@ class AI_Function_IdTestCase(TestCase):
         )  # create an AI object to delete
 
     def test_delete_ais(self):
-        self.client.force_login(user=self.user)
-        print(f'the user id {self.user.id}')
-        print(f'the ai id= {self.ais.id} and its user id= {self.user.id} ')
-        response = self.client.delete(reverse('ai_datail', args=[self.ais.id]))
-        # self.assertEqual(response.status_code, 204)
+        self.client.login(email='test@email.com', password='testpassword')
+        token = RefreshToken.for_user(self.user)
+
+        HEADERS = {'Bearer': str(token.access_token)}
+
+        response = self.client.delete(
+            reverse('ai_datail', args=[self.ais.id]), headers=HEADERS)
+        self.assertEqual(response.status_code, 204)
         self.assertFalse(AI.objects.filter(id=self.ais.id).exists())
         self.client.logout()
