@@ -43,6 +43,7 @@ urlpatterns = [
     path('messages/', views.Messages.as_view(), name='messages_get'),
     path('message/<int:id>/viewed/',
          views.Messages.as_view(), name='message_viewed'),
+    path('scrapping', views.Scrapping.as_view(), name="scrapping")
     # path('main/', include('main.urls'))
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

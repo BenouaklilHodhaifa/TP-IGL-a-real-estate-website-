@@ -38,8 +38,8 @@ function App() {
             <Route path={"Ajouter"} element={<AjouterAi />} />
           </Route>
         </Routes>
-  </ProtectRoutes>
-    {/*<Ai annonce={housesData[0]}/>*/}
+      </ProtectRoutes>
+      {/*<Ai annonce={housesData[0]}/>*/}
     </div>
   );
 }

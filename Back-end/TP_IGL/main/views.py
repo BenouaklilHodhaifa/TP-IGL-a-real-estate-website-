@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-
+from io import BytesIO
 from django.http.response import JsonResponse
 from .models import AI, Message
 from rest_framework.decorators import api_view
@@ -25,7 +25,11 @@ from rest_framework.permissions import AllowAny
 from .models import UserAccount
 from rest_framework.parsers import JSONParser
 from django.db.models import Q
-
+from bs4 import BeautifulSoup
+import re
+from django.core.files.base import File
+from django.core.files.uploadedfile import InMemoryUploadedFile
+import magic
 
 class GoogleView(APIView):
 
@@ -224,6 +228,119 @@ class Messages(APIView):
         message.save()
         return Response(status=200)
 
+
+class Scrapping(APIView):
+    def get(slef, request):
+        url = "http://www.annonce-algerie.com/upload/flux/rss_1.xml"
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, 'xml')
+        items = soup.find_all('item')
+        links = []
+        for item in items:
+            links.append(item.find('link').text)
+        data_ai = []
+        for link in links:
+            ai = {}
+            response = requests.get(link)
+            data = BeautifulSoup(response.text, 'html.parser')
+            tables = data.find_all('table', {'class': 'da_rub_cadre'})
+            for table in tables:
+                table_label = table.find_all('td', {'class': 'da_label_field'})
+                table_content = table.find_all(
+                    'td', {'class': 'da_field_text'})
+                cpt = 0
+                if len(table_label) == len(table_content):
+                    titres = table.find('tr', {'class': 'da_entete'})
+                    if titres != None:
+                        titre = titres.text
+                        titre_table = titre.split(' ')
+                        co = 1
+                        titre = ''
+                        while len(titre_table) > co:
+                            titre = titre+' '+titre_table[co]
+                            co = co+1
+                        ai['titre'] = titre
+                        while cpt < len(table_label):
+                            if table_label:
+                                if ((table_label[cpt].text.strip() == 'Catégorie')):
+                                    label = table_label[cpt].text
+                                    content = table_content[cpt].text
+                                    contents = content.split('>')
+                                    if len(contents) > 2:
+                                        content = contents[1].strip()
+                                    if ((content == 'Vente') or (content == 'Echange') or (content == 'Location')):
+                                        ai['category'] = content
+                                elif (table_label[cpt].text.strip() == 'Localisation'):
+                                    label = table_label[cpt].text
+                                    content = table_content[cpt].text
+                                    contents = content.split('>')
+                                    if len(contents) > 2:
+                                        ai['wilaya'] = contents[len(
+                                            contents)-2].strip()
+                                        ai['commune'] = contents[len(
+                                            contents)-1].strip()
+
+                                elif table_label[cpt].text.strip() == 'Prix' or table_label[cpt].text.strip() == 'Surface':
+                                    label = table_label[cpt].text.strip()
+                                    content = re.findall(
+                                        r'\d+', table_content[cpt].text.strip())[0]
+                                    if table_label[cpt].text.strip() == 'Prix':
+                                        ai['prix'] = content
+                                    else:
+                                        ai['surface'] = content
+                                elif table_label[cpt].text.strip() == 'Modifiée le':
+                                    field = table_content[cpt].text.split("/")
+                                    ai['date_Publication'] = field[2]+'-' + \
+                                        field[1]+'-'+field[0]+'T00:00:00'
+                                elif table_label[cpt].text.strip() == 'Adresse':
+                                    ai['adresse_ai'] = table_content[cpt].text
+                                elif table_label[cpt].text.strip() == 'Texte':
+                                    ai['description'] = table_content[cpt].text
+                                elif table_label[cpt].text.strip() != 'Insérée le':
+                                    label = table_label[cpt].text.strip()
+                                    content = table_content[cpt].text.strip()
+                                    ai[label] = content
+                            cpt = cpt+1
+                imgs = table.find_all('img', {'class': 'PhotoMin1'})
+                images = []
+                if imgs != None:
+                    for img in imgs:
+                        image_url = "http://www.annonce-algerie.com/" + \
+                            img['src']
+                        response = requests.get(image_url)
+                        # Create a BytesIO object from the image content
+                        file_stream = BytesIO(response.content)
+                        magic_obj = magic.Magic(mime=True)
+                        # Get the MIME type of the file
+                        file_type = magic_obj.from_buffer(file_stream.getvalue())
+                        name_image = "scrapping."+file_type.split('/')[1]
+                        uploaded_file = InMemoryUploadedFile(
+                            file_stream, None, name_image, file_type, len(
+                                response.content), None
+                        )
+                        images.append(uploaded_file)
+                    if len(images) != 0:
+                        ai['uploaded_images'] = images
+            data_tel = data.find('li', {'class': 'cellphone'})
+            tel = data_tel.text.split(':')[1].strip()
+            ai['information_tel'] = tel
+            data_ai.append(ai)
+        rel_data_ai = []
+        for data in data_ai:
+            if len(data) > 1:
+                if not ('uploaded_images' in data):
+                    data['uploaded_images'] = []
+                data['user'] = 1
+                rel_data_ai.append(data)
+
+        # return Response(rel_data_ai)
+        for rel_state in rel_data_ai:
+            serializer = AISerializer(data=rel_state)
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                continue
+        return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
 
 ############   ADDITIONAL   ##############
 

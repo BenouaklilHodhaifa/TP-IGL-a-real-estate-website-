@@ -60,7 +60,7 @@ export const housesData = [
   {
     id:1,
     titre:"Ai 6",
-    description:"annonce 6",
+    description:"C'est une maison avec un étage. Au rez-de-chaussée, il y a une chambre, une cuisine, une salle de bains, un salon et une salle à manger. Dans la chambre, il y a un lit, un radiateur, une table de nuit, un placard, un bureau et une chaise. Le bureau est grand, il a 4 tiroirs.",
     date_Publication:"2023-01-07T19:32:34Z",
     type_ai:"Terrain_Agricole",
     category:"Location",
@@ -75,7 +75,7 @@ export const housesData = [
     information_prenom:"Doe1",
     information_adresse:"adresse user 123",
     user:"2",
-    uploaded_images:home,
+    uploaded_images:[home,Agent10,Agent3,House12Lg],
 },
   {
     id: 2,

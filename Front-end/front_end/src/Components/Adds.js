@@ -15,12 +15,19 @@ function Adds(props) {
   const [arr, setArr] = useState([]);
 
   const url = "http://127.0.0.1:8000/ai/";
+  const token = JSON.parse(localStorage.getItem("Recent_token"))?.token;
 
   useEffect(() => {
-    axios.get(url).then((response) => {
-      console.log(response.data);
-      setArr(response.data);
-    });
+    axios
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setArr(response.data);
+      });
   }, []);
 
   return (
