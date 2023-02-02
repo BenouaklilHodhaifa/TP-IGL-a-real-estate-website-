@@ -20,7 +20,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 import requests
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAdminUser
 # from django.contrib.auth.models import User
 from .models import UserAccount
 from rest_framework.parsers import JSONParser
@@ -30,6 +30,7 @@ import re
 from django.core.files.base import File
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import magic
+
 
 class GoogleView(APIView):
 
@@ -70,6 +71,7 @@ class GoogleView(APIView):
         response = {}
         response["user_id"] = user.id
         response['username'] = user.email
+        response["is_admin"] = user.is_staff
         response['access_token'] = str(token.access_token)
         response['refresh_token'] = str(token)
         return Response(response)
@@ -312,7 +314,8 @@ class Scrapping(APIView):
                         file_stream = BytesIO(response.content)
                         magic_obj = magic.Magic(mime=True)
                         # Get the MIME type of the file
-                        file_type = magic_obj.from_buffer(file_stream.getvalue())
+                        file_type = magic_obj.from_buffer(
+                            file_stream.getvalue())
                         name_image = "scrapping."+file_type.split('/')[1]
                         uploaded_file = InMemoryUploadedFile(
                             file_stream, None, name_image, file_type, len(
