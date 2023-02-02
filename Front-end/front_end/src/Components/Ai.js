@@ -66,14 +66,58 @@ const Ai = ({annonce}) => {
       {showModal ? (
         <>
           <div
-            className="flex fixed inset-0 z-50 bg-yellow-700" onClick={(e)=>{e.stopPropagation()}}
+            className="flex flex-col inset-0 z-50 bg-[#F5FBFF] scroll-auto absolute" onClick={(e)=>{e.stopPropagation()}}
           >
-            <div className="flex flex-row justify-center w-full">
-                <AiOutlineArrowLeft className="relative mt-40 mx-5 " onClick={()=>setSlides((slides - 1)%uploaded_images.length)}/>
-                <img src={uploaded_images[slides]} className=" h-[350px] w-[800px]"/>
-                <AiOutlineArrowRight className="relative mt-40 mx-5" onClick={()=>setSlides((slides + 1)%uploaded_images.length)}/>
-
+            <div className="flex flex-row justify-center w-full my-2 ">
+                <AiOutlineArrowLeft className="relative mt-40 " size={30} onClick={()=>{if(slides > 0){setSlides(slides - 1)}}}/>
+                <img src={uploaded_images[slides]} className="mx-5 h-[350px] w-[800px] select-none rounded-lg" onClick={()=>{setSlides((slides + 1)%uploaded_images.length)}}/>
+                <AiOutlineArrowRight className="relative mt-40 " size={30} onClick={()=>{if(slides < uploaded_images.length -1){setSlides(slides + 1)}}}/>
             </div>
+            <div className="flex flex-row justify-between">
+              <div className="bg-violet-700 flex-1">
+                <h6>
+                {titre}
+                </h6>
+                <p>
+                  {description}
+                </p>
+                <div className="flex flex-row p-4 items-center justify-start">
+                  <AiFillDollarCircle size={20} className="text-[#4A60A1]" />
+                  <h6 className="ml-2">{prix}</h6>
+                  <h6 className="ml-1">DINARS</h6>
+                </div>
+                <div className="flex flex-row p-4 items-center justify-start">
+                   <BsFillTelephoneOutboundFill size={20} className="text-[#4A60A1]" />
+                  <h6 className="ml-2">{information_tel}</h6>
+                </div>
+                <div className="flex flex-row p-4 items-center justify-start">
+                  <RxRulerSquare size={20} className="text-[#4A60A1]" />
+                  <h6 className="ml-2">{surface}</h6>
+                  <h6 className="ml-1">m^2</h6>
+                </div>
+                <div className="flex flex-row p-4 items-center justify-start">
+                  <BsFillHouseDoorFill size={20} className="text-[#4A65A1] " />
+                  <h6 className="ml-2">{type_ai}</h6>
+                </div>
+              </div>
+
+
+              
+              <div className="bg-violet-300 flex-1 flex justify-center">
+                maps
+              </div>
+            </div>
+            <div>
+              <form>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+                  faire un offre
+                </label>
+                <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline w-[250px]" type="text" placeholder=""/>
+                <button/>
+              </form>
+              
+            </div>
+
             
 
             
