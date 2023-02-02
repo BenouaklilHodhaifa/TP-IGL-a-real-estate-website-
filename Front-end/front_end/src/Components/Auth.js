@@ -27,7 +27,7 @@ const Auth = () => {
                 }
               );
 
-              console.log((await res).data.access_token);
+              console.log((await res).data);
               localStorage.setItem(
                 "Recent_token",
                 JSON.stringify({
