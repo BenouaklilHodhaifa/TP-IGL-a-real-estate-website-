@@ -78,7 +78,7 @@ class AI(models.Model):
     titre = models.CharField(max_length=50)
     description = models.TextField()
     date_Publication = models.DateTimeField(default=datetime.now)
-    type_ai = models.CharField(max_length=50, choices=x)
+    type_ai = models.CharField(max_length=50, choices=x, null=True, blank=True)
     category = models.CharField(max_length=50, choices=y)
     surface = models.DecimalField(max_digits=10, decimal_places=2)
     prix = models.DecimalField(max_digits=10, decimal_places=2)
@@ -86,10 +86,12 @@ class AI(models.Model):
     commune = models.CharField(max_length=50, default="")
     adresse_ai = models.CharField(max_length=255, default="")
     information_tel = models.CharField(max_length=30)
-    information_email = models.EmailField()
-    information_nom = models.CharField(max_length=50, default="")
-    information_prenom = models.CharField(max_length=50, default="")
-    information_adresse = models.CharField(max_length=255, default="")
+    information_email = models.EmailField(null=True, blank=True)
+    information_nom = models.CharField(max_length=50, default="", null=True, blank=True)
+    information_prenom = models.CharField(
+        max_length=50, default="", null=True, blank=True)
+    information_adresse = models.CharField(
+        max_length=255, default="", null=True, blank=True)
     # image = models.ImageField(upload_to='img')
 
     user = models.ForeignKey(
@@ -106,9 +108,9 @@ class AiImage(models.Model):
     # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     ai = models.ForeignKey(AI, on_delete=models.CASCADE,
                            related_name="images", null=True, blank=True)
-    
+
     image = models.FileField(upload_to="img", null=True, blank=True)
-    
+
 
 class Message(models.Model):
     # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
