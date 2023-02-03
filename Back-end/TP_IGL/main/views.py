@@ -20,7 +20,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 import requests
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAdminUser
 # from django.contrib.auth.models import User
 from .models import UserAccount
 from rest_framework.parsers import JSONParser
@@ -30,6 +30,7 @@ import re
 from django.core.files.base import File
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import magic
+
 
 class GoogleView(APIView):
 
@@ -70,6 +71,7 @@ class GoogleView(APIView):
         response = {}
         response["user_id"] = user.id
         response['username'] = user.email
+        response["is_admin"] = user.is_staff
         response['access_token'] = str(token.access_token)
         response['refresh_token'] = str(token)
         return Response(response)
@@ -95,6 +97,7 @@ class AI_list(APIView):
 
 
 class AI_detail(APIView):
+
     """"Retrieve, update or delete an AI."""
 
     def get_object(self, pk):
@@ -118,7 +121,7 @@ class AI_detail(APIView):
 
     def delete(self, request, pk):
         ai = self.get_object(pk)
-        user_email = request.user
+        user_email = request.user.email
         user = UserAccount.objects.get(email=user_email)
         ai_user = UserAccount.objects.get(email=ai.user)
         if (user.id != ai_user.id):
@@ -130,7 +133,8 @@ class AI_detail(APIView):
 
 
 class AiSearch(APIView):
-    def get(self, request):
+
+    def post(self, request):
         queryset_all = AI.objects.all()
         key_words = request.data["key_words"]
         key_words = key_words.split()
@@ -158,7 +162,7 @@ class AiUser(APIView):
 class AiFilter(APIView):
     """"Filter search results by Type, wilaya, commune, periode entre deux dates de publication"""
 
-    def get(self, request):
+    def post(self, request):
         queryset = AI.objects.all()
         if (request.data["by_type"] == True):
             queryset = queryset.filter(type_ai=request.data["type"])
@@ -310,7 +314,8 @@ class Scrapping(APIView):
                         file_stream = BytesIO(response.content)
                         magic_obj = magic.Magic(mime=True)
                         # Get the MIME type of the file
-                        file_type = magic_obj.from_buffer(file_stream.getvalue())
+                        file_type = magic_obj.from_buffer(
+                            file_stream.getvalue())
                         name_image = "scrapping."+file_type.split('/')[1]
                         uploaded_file = InMemoryUploadedFile(
                             file_stream, None, name_image, file_type, len(

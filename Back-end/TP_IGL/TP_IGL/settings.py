@@ -100,17 +100,6 @@ DATABASES = {
     }
 }
 
-# this is just a testing email
-# EMAIL: john.doe.2023.example@gmail.com
-# password:JohnDoe2002
-# appPassword:zwtxlzsvztrbvqrf
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'john.doe.2023.example@gmail.com'
-EMAIL_HOST_PASSWORD = 'zwtxlzsvztrbvqrf'
-EMAIL_USE_TLS = True
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
