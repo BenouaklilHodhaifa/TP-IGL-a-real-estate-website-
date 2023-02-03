@@ -24,44 +24,84 @@ const Form = () => {
   const token = JSON.parse(localStorage.getItem("Recent_token"))?.token;
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const file_datas = [];
-    uploadedimages.map((e) => {
-      const formData = new FormData();
-      formData.append("file", e);
-      console.log(formData);
-      file_datas.push(formData);
+    // const multiple_data = [];
+    // const formData = new FormData();
+    // uploadedimages.forEach((file) => {
+    //   formData.append("file", file);
+    //   console.log(file);
+    //   console.log(formData);
+    //   multiple_data.push(file);
+    // });
+    // console.log(multiple_data);
+    const formData = new FormData();
+    formData.append("titre", titre);
+    formData.append("description", description);
+    formData.append("type_ai", typeai);
+    formData.append("category", category);
+    formData.append("surface", surface);
+    formData.append("prix", prix);
+    formData.append("wilaya", wilaya);
+    formData.append("commune", commune);
+    formData.append("adresse_ai", adresse_ai);
+    formData.append("information_tel", information_tel);
+    formData.append("information_email", information_email);
+    formData.append("information_nom", information_nom);
+    formData.append("information_prenom", information_prenom);
+    formData.append("information_adresse", information_adresse);
+    formData.append("user", "1");
+    uploadedimages.forEach((image, index) => {
+      formData.append("uploaded_images", image);
     });
 
-    const data = {
-      titre: titre,
-      description: description,
-      date_Publication: date_Publication,
-      type_ai: typeai,
-      category: category,
-      surface: surface,
-      prix: prix,
-      wilaya: wilaya,
-      commune: commune,
-      adresse_ai: adresse_ai,
-      information_tel: information_tel.toString(),
-      information_email: information_email,
-      information_nom: information_nom,
-      information_prenom: information_prenom,
-      information_adresse: information_adresse,
-      user: user,
-      uploaded_images: [],
-    };
-
-    try {
-      const rr = await axios.post("http://127.0.0.1:8000/ai/", data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    axios({
+      url: "http://127.0.0.1:8000/ai/",
+      method: "POST",
+      data: formData,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    })
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((err) => {
+        console.log(err);
       });
-      alert("islamkmak");
-    } catch (err) {
-      console.log(err);
-    }
+
+    // axios({
+    //   url: "http://127.0.0.1:8000/ai/",
+    //   method: "POST",
+    //   data: {
+    //     titre: titre,
+    //     description: description,
+    //     // date_Publication: date_Publication,
+    //     type_ai: typeai,
+    //     category: category,
+    //     surface: surface,
+    //     prix: prix,
+    //     wilaya: wilaya,
+    //     commune: commune,
+    //     adresse_ai: adresse_ai,
+    //     information_tel: information_tel,
+    //     information_email: information_email,
+    //     information_nom: information_nom,
+    //     information_prenom: information_prenom,
+    //     information_adresse: information_adresse,
+    //     user: "1",
+    //     uploaded_images: multiple_data,
+    //   },
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //     // "Content-Type": "multipart/form-data",
+    //   },
+    // })
+    //   .then((result) => {
+    //     console.log(result);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   };
 
   const onImageChange = (e) => {

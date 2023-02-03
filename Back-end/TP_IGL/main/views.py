@@ -88,6 +88,7 @@ class AI_list(APIView):
 
     def post(self, request):
         serializer = AISerializer(data=request.data)
+        print(request.data)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)

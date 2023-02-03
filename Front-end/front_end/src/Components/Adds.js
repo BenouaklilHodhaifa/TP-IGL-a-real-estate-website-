@@ -31,12 +31,13 @@ function Adds(props) {
   }, []);
 
   return (
-    <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 py-8 px-3 items-center justify-center">
-      {arr.map((ai) => (
-        <div key={ai.id}>
-          <Ai annonce={ai} />
-        </div>
-      ))}
+    <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 py-8 px-3 items-center justify-center m-auto">
+      {arr &&
+        arr.map((ai) => (
+          <div key={ai.id}>
+            <Ai annonce={ai} />
+          </div>
+        ))}
     </div>
   );
 }
