@@ -24,7 +24,6 @@ function App() {
       children
     );
   };
-  console.log(housesData[0]);
 
   return (
     <div>
