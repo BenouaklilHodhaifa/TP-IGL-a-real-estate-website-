@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Ai from "./Ai";
+import Ai from "./Ai_old";
 import { MdVerifiedUser } from "react-icons/md";
 const Recherche = () => {
   const [type_1, setType1] = useState(false);
