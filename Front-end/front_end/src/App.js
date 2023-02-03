@@ -17,7 +17,6 @@ function App() {
   const { pathname } = useLocation();
   const ProtectRoutes = ({ children }) => {
     const token = JSON.parse(localStorage.getItem("Recent_token"))?.token;
-    console.log(token);
     return !token && pathname !== "/" ? (
       <Navigate to="/" />
     ) : token && pathname === "/" ? (
@@ -29,7 +28,7 @@ function App() {
 
   return (
     <div>
-      {/*<ProtectRoutes>
+      <ProtectRoutes>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/user" element={<UserPage />}>
@@ -39,8 +38,8 @@ function App() {
             <Route path={"Ajouter"} element={<AjouterAi />} />
           </Route>
         </Routes>
-  </ProtectRoutes>*/}
-    <Ai annonce={housesData[0]}/>
+  </ProtectRoutes>
+    {/* <Ai annonce={housesData[0]}/> */}
 
     </div>
   );

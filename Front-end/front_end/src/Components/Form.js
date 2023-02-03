@@ -49,6 +49,8 @@ const Form = () => {
     formData.append("information_prenom", information_prenom);
     formData.append("information_adresse", information_adresse);
     formData.append("user", "1");
+    formData.append("cordonne_x", "1");
+    formData.append("cordonne_y", "1");
     uploadedimages.forEach((image, index) => {
       formData.append("uploaded_images", image);
     });
@@ -62,46 +64,8 @@ const Form = () => {
         "Content-Type": "multipart/form-data",
       },
     })
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    // axios({
-    //   url: "http://127.0.0.1:8000/ai/",
-    //   method: "POST",
-    //   data: {
-    //     titre: titre,
-    //     description: description,
-    //     // date_Publication: date_Publication,
-    //     type_ai: typeai,
-    //     category: category,
-    //     surface: surface,
-    //     prix: prix,
-    //     wilaya: wilaya,
-    //     commune: commune,
-    //     adresse_ai: adresse_ai,
-    //     information_tel: information_tel,
-    //     information_email: information_email,
-    //     information_nom: information_nom,
-    //     information_prenom: information_prenom,
-    //     information_adresse: information_adresse,
-    //     user: "1",
-    //     uploaded_images: multiple_data,
-    //   },
-    //   headers: {
-    //     Authorization: `Bearer ${token}`,
-    //     // "Content-Type": "multipart/form-data",
-    //   },
-    // })
-    //   .then((result) => {
-    //     console.log(result);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+      .then((result) => {})
+      .catch((err) => {});
   };
 
   const onImageChange = (e) => {

@@ -1,19 +1,24 @@
 import {
   BsFillTelephoneOutboundFill,
   BsFillHouseDoorFill,
-  BsHouseDoorFill,
 } from "react-icons/bs";
-import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai";
-import { AiFillDollarCircle } from "react-icons/ai";
+
+import { AiFillDollarCircle, AiFillMail } from "react-icons/ai";
 import { RxRulerSquare } from "react-icons/rx";
+
+import { BsFillHeartFill, BsHeart } from "react-icons/bs";
 import image from "./photo.png";
 //npm install reactjs-popup --save for the popup
-import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
-import { useState } from "react";
+import React, { useState } from "react";
+import "leaflet/dist/leaflet.css";
 
-const Ai = ({ annonce }) => {
+import axios from "axios";
+
+const Ai = ({ annonce, favorites, favorites_ai }) => {
+  const token = JSON.parse(localStorage.getItem("Recent_token"))?.token;
   const {
+    id = "",
     titre = "",
     description = "",
     date_Publication = "",
@@ -32,22 +37,89 @@ const Ai = ({ annonce }) => {
     user = "",
     images = [],
   } = annonce;
+  const [favorite, setFavorite] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [slides, setSlides] = useState(0);
-  console.log(showModal)
+  const [message, setMessage] = useState("");
+  const [messageChanged, setMessageChanged] = useState(false);
+  const [user_id, setUser_id] = useState(
+    JSON.parse(localStorage.getItem("Recent_id")).id
+  );
+  const [favorite_id, SetFavorite_id] = useState("");
+
+  // if (favorites_ai.length > 0) {
+  //   favorites_ai.map((e) => {
+  //     if (e.id == id) {
+  //       setFavorite(true);
+  //       // SetFavorite_id(.id);
+  //     }
+  //   });
+  // }
+
+  React.useEffect(() => {
+    if (favorites_ai.length > 0) {
+      const isFavorite = favorites_ai.some((e) => e.id === id);
+      setFavorite(isFavorite);
+    }
+    if (favorites.length > 0) {
+      favorites.map((e) => {
+        if (e.ai == id) {
+          SetFavorite_id(e.id);
+        }
+      });
+    }
+  }, []);
 
   return (
     annonce && (
       <div
         className="bg-[#F5FBFF] shadow-1  rounded-lg min-h-[375px] w-[350px] cursor-pointer  hover:shadow-2xl  p-1"
-        onClick={() => setShowModal(!showModal)}
+        // onClick={() => setShowModal(!showModal)}
       >
+        <div
+          className="absolute"
+          id={favorite_id}
+          onClick={(e) => {
+            setFavorite(!favorite);
+            if (favorite) {
+              if (favorite_id != "") {
+                axios({
+                  method: "delete",
+                  url: `http://127.0.0.1:8000/favorite/${favorite_id}`,
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                })
+                  .then((e) => {})
+                  .catch((e) => {});
+              }
+            } else {
+              axios({
+                method: "post",
+                url: "http://127.0.0.1:8000/favorite",
+                data: {
+                  ai: id,
+                  user: user_id,
+                },
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+                .then((e) => {
+                  SetFavorite_id(e.data.id);
+                })
+                .catch((e) => {});
+            }
+          }}
+        >
+          {favorite ? (
+            <BsFillHeartFill size={20} className="text-red-500" />
+          ) : (
+            <BsHeart size={20} className="text-red-500" />
+          )}
+        </div>
         <img
-          src={
-            images[0]
-              ? "http://127.0.0.1:8000/" + images[0].image
-              : image
-          }
+          src={images[0] ? "http://127.0.0.1:8000/" + images[0].image : image}
           alt="imggg"
           className="w-full h-[230px] rounded-lg"
         />
@@ -72,95 +144,6 @@ const Ai = ({ annonce }) => {
             <h6 className="ml-2">{type_ai}</h6>
           </div>
         </div>
-
-        {showModal ? (
-          <>
-            <div
-              className="flex flex-col inset-0 z-50 bg-[#F5FBFF] scroll-auto absolute"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
-              <div className="flex flex-row justify-center w-full my-2 ">
-                <AiOutlineArrowLeft
-                  className="relative mt-40 "
-                  size={30}
-                  onClick={() => {
-                    if (slides > 0) {
-                      setSlides(slides - 1);
-                    }
-                  }}
-                />
-                <img
-                  src={images[slides].image}
-                  className="mx-5 h-[350px] w-[800px] select-none rounded-lg"
-                  onClick={() => {
-                    setSlides((slides + 1) % images.length);
-                  }}
-                />
-                <AiOutlineArrowRight
-                  className="relative mt-40 "
-                  size={30}
-                  onClick={() => {
-                    if (slides < images.length - 1) {
-                      setSlides(slides + 1);
-                    }
-                  }}
-                />
-              </div>
-              <div className="flex flex-row justify-between">
-                <div className="bg-violet-700 flex-1">
-                  <h6>{titre}</h6>
-                  <p>{description}</p>
-                  <div className="flex flex-row p-4 items-center justify-start">
-                    <AiFillDollarCircle size={20} className="text-[#4A60A1]" />
-                    <h6 className="ml-2">{prix}</h6>
-                    <h6 className="ml-1">DINARS</h6>
-                  </div>
-                  <div className="flex flex-row p-4 items-center justify-start">
-                    <BsFillTelephoneOutboundFill
-                      size={20}
-                      className="text-[#4A60A1]"
-                    />
-                    <h6 className="ml-2">{information_tel}</h6>
-                  </div>
-                  <div className="flex flex-row p-4 items-center justify-start">
-                    <RxRulerSquare size={20} className="text-[#4A60A1]" />
-                    <h6 className="ml-2">{surface}</h6>
-                    <h6 className="ml-1">m^2</h6>
-                  </div>
-                  <div className="flex flex-row p-4 items-center justify-start">
-                    <BsFillHouseDoorFill
-                      size={20}
-                      className="text-[#4A65A1] "
-                    />
-                    <h6 className="ml-2">{type_ai}</h6>
-                  </div>
-                </div>
-
-                <div className="bg-violet-300 flex-1 flex justify-center">
-                  maps
-                </div>
-              </div>
-              <div>
-                <form>
-                  <label
-                    className="block text-gray-700 text-sm font-bold mb-2"
-                    htmlFor="password"
-                  >
-                    faire un offre
-                  </label>
-                  <input
-                    className="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline w-[250px]"
-                    type="text"
-                    placeholder=""
-                  />
-                  <button />
-                </form>
-              </div>
-            </div>
-          </>
-        ) : null}
       </div>
     )
   );
