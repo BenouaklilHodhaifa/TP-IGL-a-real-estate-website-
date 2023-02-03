@@ -2,16 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
 import { data } from "autoprefixer";
-import Ai from "./Ai_old";
+import Ai from "./Ai";
 
-function Adds(props) {
-  const infos = {
-    information_tel: "",
-    surface: "",
-    prix: "",
-    type_ai: "",
-  };
-
+const Adds = (props) => {
   const [arr, setArr] = useState([]);
 
   const url = "http://127.0.0.1:8000/ai/";
@@ -31,7 +24,7 @@ function Adds(props) {
   }, []);
 
   return (
-    <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 py-8 px-3 items-center justify-center m-auto">
+    <div className="w-full flex flex-col gap-3 md:grid md:grid-cols-2 md:pl-20 lg:grid-cols-3 lg:pl-10 xl:grid-cols-4 xl:pl-12 md:gap-y-4  py-8 px-3 items-center justify-center m-auto bg-transparent">
       {arr &&
         arr.map((ai) => (
           <div key={ai.id}>
@@ -40,6 +33,6 @@ function Adds(props) {
         ))}
     </div>
   );
-}
+};
 
 export default Adds;

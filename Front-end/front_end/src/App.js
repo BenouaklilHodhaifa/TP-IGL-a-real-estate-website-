@@ -10,8 +10,9 @@ import Adds from "./Components/Adds";
 import AjouterAi from "./Components/AjouterAi";
 import SearchAi from "./Components/SearchAi";
 import axios from "axios";
-
-
+import Personnel from "./Components/Personnel";
+import Favorie from "./Components/Favorie";
+import Affichageai from "./Components/Affichageai";
 
 function App() {
   const { pathname } = useLocation();
@@ -29,7 +30,7 @@ function App() {
 
   return (
     <div>
-      {/*<ProtectRoutes>
+      <ProtectRoutes>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/user" element={<UserPage />}>
@@ -37,11 +38,13 @@ function App() {
             <Route path={"message"} element={<Messages />} />
             <Route path={"Search"} element={<SearchAi />} />
             <Route path={"Ajouter"} element={<AjouterAi />} />
+            <Route path={"personnel"} element={<Personnel />} />
+            <Route path={"Favorie"} element={<Favorie />} />
+            <Route path={"Affichage"} element={<Affichageai />} />
           </Route>
         </Routes>
-  </ProtectRoutes>*/}
-    <Ai annonce={housesData[0]}/>
-
+      </ProtectRoutes>
+      {/* <Ai annonce={housesData[0]}/> */}
     </div>
   );
 }
