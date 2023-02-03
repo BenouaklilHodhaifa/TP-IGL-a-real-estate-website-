@@ -43,7 +43,10 @@ urlpatterns = [
     path('messages/', views.Messages.as_view(), name='messages_get'),
     path('message/<int:id>/viewed/',
          views.Messages.as_view(), name='message_viewed'),
-    path('scrapping', views.Scrapping.as_view(), name="scrapping")
+    path('scrapping', views.Scrapping.as_view(), name="scrapping"),
+    path('favorite', views.Favorite_list.as_view(), name='favorite'),
+    path('favorite/<int:pk>', views.Favorite_detais.as_view(), name='favorite')
+    ,path('favorite_user',views.Favorite_get_by_user.as_view(), name='favorite')
     # path('main/', include('main.urls'))
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

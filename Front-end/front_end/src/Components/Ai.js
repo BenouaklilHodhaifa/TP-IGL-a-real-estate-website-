@@ -6,7 +6,6 @@ import {
 import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai";
 import { AiFillDollarCircle } from "react-icons/ai";
 import { RxRulerSquare } from "react-icons/rx";
-import { BsFillHeartFill,BsHeart } from "react-icons/bs";
 import image from "./photo.png";
 //npm install reactjs-popup --save for the popup
 import Popup from "reactjs-popup";
@@ -33,26 +32,22 @@ const Ai = ({ annonce }) => {
     user = "",
     images = [],
   } = annonce;
-  const [favorite, setFavorite] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [slides, setSlides] = useState(0);
-  
+  console.log(showModal)
+
   return (
     annonce && (
       <div
         className="bg-[#F5FBFF] shadow-1  rounded-lg min-h-[375px] w-[350px] cursor-pointer  hover:shadow-2xl  p-1"
-        // onClick={() => setShowModal(!showModal)}
+        onClick={() => setShowModal(!showModal)}
       >
-        <div
-          className="absolute "
-          onClick={(e) => {
-            setFavorite(!favorite);
-          }}
-        >
-          {favorite? <BsFillHeartFill size={20} className="text-red-500" /> :<BsHeart size={20} className="text-red-500" />}
-        </div>
         <img
-          src={images[0] ? "http://127.0.0.1:8000/" + images[0].image : image}
+          src={
+            images[0]
+              ? "http://127.0.0.1:8000/" + images[0].image
+              : image
+          }
           alt="imggg"
           className="w-full h-[230px] rounded-lg"
         />

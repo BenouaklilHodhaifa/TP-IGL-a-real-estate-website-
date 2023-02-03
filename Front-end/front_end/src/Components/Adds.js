@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
 import { data } from "autoprefixer";
-import Ai from "../Components/Ai";
+import Ai from "./Ai_old";
 
 function Adds(props) {
   const infos = {

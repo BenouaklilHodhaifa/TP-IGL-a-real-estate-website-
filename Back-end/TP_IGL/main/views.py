@@ -4,7 +4,7 @@ from io import BytesIO
 from django.http.response import JsonResponse
 from .models import AI, Message
 from rest_framework.decorators import api_view
-from .serializers import AISerializer, MessageSerializer
+from .serializers import AISerializer, MessageSerializer, FavoriteSerializer
 from rest_framework import status, filters
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -22,7 +22,7 @@ import requests
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny, IsAdminUser
 # from django.contrib.auth.models import User
-from .models import UserAccount
+from .models import UserAccount, Favorite
 from rest_framework.parsers import JSONParser
 from django.db.models import Q
 from bs4 import BeautifulSoup
@@ -90,7 +90,6 @@ class AI_list(APIView):
 
     def post(self, request):
         serializer = AISerializer(data=request.data)
-        print(request.data)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
@@ -345,6 +344,58 @@ class Scrapping(APIView):
             else:
                 continue
         return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+
+# favorite
+
+
+class Favorite_get_by_user(APIView):
+    def put(self, request):
+        queryset = Favorite.objects.all()
+        query_favorite_with_user = queryset.filter(user=request.data["user"])
+        serializer = FavoriteSerializer(query_favorite_with_user, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+
+class Favorite_list(APIView):
+    def put(self, request):
+        queryset = Favorite.objects.all()
+        query_favorite_with_user = queryset.filter(user=request.data["user"])
+        queryset_ai = AI.objects.all()
+        ai_array = []
+        for user_favorite in query_favorite_with_user:
+            ai_array.append(user_favorite.ai)
+        serializer = AISerializer(ai_array, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    def post(self, request):
+        serializer = FavoriteSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class Favorite_detais(APIView):
+    """"Retrieve, update or delete an Favorite."""
+
+    def get_object(self, pk):
+        try:
+            return Favorite.objects.get(pk=pk)
+        except AI.DoesNotExist:
+            raise Http404
+
+    def delete(self, request, pk):
+        favorite = self.get_object(pk)
+        user_email = request.user.email
+        user = UserAccount.objects.get(email=user_email)
+        favorite_user = UserAccount.objects.get(email=favorite.user.email)
+        if (user.id != favorite_user.id):
+            response = {}
+            response["details"] = "this AI doesn't belong to this user"
+            return JsonResponse(data=response, status=status.HTTP_401_UNAUTHORIZED)
+        favorite.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
 
 ############   ADDITIONAL   ##############
 

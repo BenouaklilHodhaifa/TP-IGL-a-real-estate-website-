@@ -80,20 +80,21 @@ class AI(models.Model):
     date_Publication = models.DateTimeField(default=datetime.now)
     type_ai = models.CharField(max_length=50, choices=x, null=True, blank=True)
     category = models.CharField(max_length=50, choices=y)
-    surface = models.DecimalField(max_digits=10, decimal_places=2)
-    prix = models.DecimalField(max_digits=10, decimal_places=2)
+    surface = models.DecimalField(max_digits=50, decimal_places=2)
+    prix = models.DecimalField(max_digits=50, decimal_places=2)
     wilaya = models.CharField(max_length=50, default="")
     commune = models.CharField(max_length=50, default="")
     adresse_ai = models.CharField(max_length=255, default="")
     information_tel = models.CharField(max_length=30)
     information_email = models.EmailField(null=True, blank=True)
-    information_nom = models.CharField(max_length=50, default="", null=True, blank=True)
+    information_nom = models.CharField(
+        max_length=50, default="", null=True, blank=True)
     information_prenom = models.CharField(
         max_length=50, default="", null=True, blank=True)
     information_adresse = models.CharField(
         max_length=255, default="", null=True, blank=True)
-    # image = models.ImageField(upload_to='img')
-
+    cordonne_x = models.DecimalField(max_digits=50, decimal_places=5,default=0)
+    cordonne_y = models.DecimalField(max_digits=50, decimal_places=5,default=0)
     user = models.ForeignKey(
         UserAccount, on_delete=models.CASCADE, related_name='ais', null=True, blank=True)
 
@@ -123,3 +124,10 @@ class Message(models.Model):
         UserAccount, on_delete=models.SET_NULL, related_name='messages_sent', null=True, blank=True)
     ai = models.ForeignKey(
         AI, on_delete=models.CASCADE, related_name='messages', null=True, blank=True)
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE,
+                             related_name='user_favorite')
+    ai = models.ForeignKey(
+        AI, on_delete=models.CASCADE, related_name='ai_favorite')

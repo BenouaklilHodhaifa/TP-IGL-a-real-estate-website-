@@ -1,6 +1,6 @@
 from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
-from .models import AI, AiImage, Message, UserAccount
+from .models import AI, AiImage, Message, UserAccount, Favorite
 from rest_framework import serializers
 
 User = get_user_model()
@@ -12,10 +12,10 @@ class AiImageSerializer(serializers.ModelSerializer):
         fields = ["id", "ai", "image"]
 
 
-class MessageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Message
-        fields = ['id', "vue", "body", "user_reciever", "user_sender", "ai"]
+# class MessageSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Message
+#         fields = ['id', "vue", "body", "user_reciever", "user_sender", "ai"]
 
 
 class AISerializer(serializers.ModelSerializer):
@@ -52,6 +52,13 @@ class MessageSerializer(serializers.ModelSerializer):
             email=self.context.get("user_reciever_email"))
         message.save()
         return message
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorite
+        fields = ['id', 'ai', 'user']
+
 
 
 class UserCreateSerializer(UserCreateSerializer):
