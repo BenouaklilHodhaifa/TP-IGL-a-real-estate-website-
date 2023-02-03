@@ -115,7 +115,7 @@ const Affichageai = (props) => {
             />
             <img
               src={
-                res.images[slides] != undefined
+                res.images[slides] !== undefined
                   ? "http://127.0.0.1:8000/" + res.images[slides].image
                   : null
               }
