@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import Ai from "./Ai_old";
+import Ai from "./Ai";
 import { MdVerifiedUser } from "react-icons/md";
 const Recherche = () => {
   const [type_1, setType1] = useState(false);
   const [type_2, setType2] = useState(false);
   const [type_3, setType3] = useState(false);
   const [type_4, setType4] = useState(false);
-  const [type_5, setType5] = useState(false);
+
   const [commune, setCommune] = useState("");
   const [wilaya, setWilaya] = useState("");
   const [date_debut, setDate_debut] = useState("");
@@ -16,7 +16,7 @@ const Recherche = () => {
   const [vue, setVue] = useState(true);
   const [response, setResponse] = useState([]);
   const token = JSON.parse(localStorage.getItem("Recent_token"))?.token;
-  let mode = type_1 || type_2 || type_3 || type_4 || type_5;
+  let mode = type_1 || type_2 || type_3 || type_4;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -53,7 +53,7 @@ const Recherche = () => {
       {vue ? (
         <div className="w-full flex flex-col items-center justify-center gap-3">
           <h1 className="font-bold text-2xl text-center text-slate-500 my-6">
-            Choisir le type de recherche
+            Choisir les type de filtrage
           </h1>
           <div className="w-full flex flex-col sm:flex-row gap-2 items-center justify-center">
             <div
@@ -83,13 +83,6 @@ const Recherche = () => {
             >
               Type
               {type_4 ? <MdVerifiedUser size={20} /> : console.log("")}
-            </div>
-            <div
-              className="h-12 w-[150px] flex flex-row gap-2 items-center justify-center bg-indigo-500 rounded-lg px-2 py-4 text-bold text-white text-lg cursor-pointer"
-              onClick={() => setType5(!type_5)}
-            >
-              Mots Cle
-              {type_5 ? <MdVerifiedUser size={20} /> : console.log("")}
             </div>
           </div>
           <form
@@ -206,26 +199,6 @@ const Recherche = () => {
               console.log()
             )}
 
-            {type_5 ? (
-              <div id="mot_cle">
-                <label
-                  className="block font-medium text-gray-700 mb-2"
-                  htmlFor="mot_cle"
-                >
-                  Mot_cle
-                </label>
-                <input
-                  className="w-full border border-gray-400 p-2 rounded-lg"
-                  id="mot_cle"
-                  type={"text"}
-                  required
-                  value={mot_cle}
-                  onChange={(e) => setMot_cle(e.target.value)}
-                />
-              </div>
-            ) : (
-              console.log()
-            )}
             <button
               className="bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600 mt-3 w-full"
               type="submit"

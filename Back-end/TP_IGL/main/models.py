@@ -93,8 +93,8 @@ class AI(models.Model):
         max_length=50, default="", null=True, blank=True)
     information_adresse = models.CharField(
         max_length=255, default="", null=True, blank=True)
-    cordonne_x = models.DecimalField(max_digits=50, decimal_places=5,default=0)
-    cordonne_y = models.DecimalField(max_digits=50, decimal_places=5,default=0)
+    lat = models.DecimalField(max_digits=50, decimal_places=10, default=0)
+    lng = models.DecimalField(max_digits=50, decimal_places=10, default=0)
     user = models.ForeignKey(
         UserAccount, on_delete=models.CASCADE, related_name='ais', null=True, blank=True)
 

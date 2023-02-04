@@ -4,6 +4,7 @@ import React, { useState } from "react";
 
 const Form = () => {
   const id = JSON.parse(localStorage.getItem("Recent_id"))?.id;
+  console.log(id);
   const [titre, setTitre] = useState("");
   const [description, setDescription] = useState("");
   const [date_Publication, setDate_Publication] = useState("");
@@ -49,8 +50,6 @@ const Form = () => {
     formData.append("information_prenom", information_prenom);
     formData.append("information_adresse", information_adresse);
     formData.append("user", "1");
-    formData.append("cordonne_x", "1");
-    formData.append("cordonne_y", "1");
     uploadedimages.forEach((image, index) => {
       formData.append("uploaded_images", image);
     });

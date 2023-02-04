@@ -2,79 +2,42 @@ import {
   BsFillTelephoneOutboundFill,
   BsFillHouseDoorFill,
 } from "react-icons/bs";
-
-import { AiFillDollarCircle, AiFillMail } from "react-icons/ai";
+import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai";
+import { AiFillDollarCircle } from "react-icons/ai";
 import { RxRulerSquare } from "react-icons/rx";
-
-import { BsFillHeartFill, BsHeart } from "react-icons/bs";
 import image from "./photo.png";
-//npm install reactjs-popup --save for the popup
-import "reactjs-popup/dist/index.css";
-import React, { useState } from "react";
-import "leaflet/dist/leaflet.css";
 
-import axios from "axios";
+import "leaflet/dist/leaflet.css";
+import { Map, MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import MarkerPosition from "./MarkerPosition";
+// import { useState } from "react";
+//npm install reactjs-popup --save for the popup
+import Popup from "reactjs-popup";
+import "reactjs-popup/dist/index.css";
+import { useState } from "react";
 
 const Ai = ({ annonce, favorites, favorites_ai }) => {
   const token = JSON.parse(localStorage.getItem("Recent_token"))?.token;
   const {
-    id = "",
     titre = "",
     description = "",
     date_Publication = "",
     type_ai = "",
-    category = "",
     surface = "",
     prix = "",
-    wilaya = "",
-    commune = "",
-    adresse_ai = "",
     information_tel = "",
-    information_email = "",
-    information_nom = "",
-    information_prenom = "",
-    information_adresse = "",
-    user = "",
     images = [],
   } = annonce;
   const [favorite, setFavorite] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [slides, setSlides] = useState(0);
-  const [message, setMessage] = useState("");
-  const [messageChanged, setMessageChanged] = useState(false);
-  const [user_id, setUser_id] = useState(
-    JSON.parse(localStorage.getItem("Recent_id")).id
-  );
-  const [favorite_id, SetFavorite_id] = useState("");
-
-  // if (favorites_ai.length > 0) {
-  //   favorites_ai.map((e) => {
-  //     if (e.id == id) {
-  //       setFavorite(true);
-  //       // SetFavorite_id(.id);
-  //     }
-  //   });
-  // }
-
-  React.useEffect(() => {
-    if (favorites_ai.length > 0) {
-      const isFavorite = favorites_ai.some((e) => e.id === id);
-      setFavorite(isFavorite);
-    }
-    if (favorites.length > 0) {
-      favorites.map((e) => {
-        if (e.ai == id) {
-          SetFavorite_id(e.id);
-        }
-      });
-    }
-  }, []);
+  console.log(showModal)
 
   return (
     annonce && (
       <div
         className="bg-[#F5FBFF] shadow-1  rounded-lg min-h-[375px] w-[350px] cursor-pointer  hover:shadow-2xl  p-1"
-        // onClick={() => setShowModal(!showModal)}
+        onClick={() => setShowModal(!showModal)}
       >
         <div
           className="absolute"

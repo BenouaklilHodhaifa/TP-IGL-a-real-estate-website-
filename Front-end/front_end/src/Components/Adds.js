@@ -4,14 +4,7 @@ import { useEffect } from "react";
 import { data } from "autoprefixer";
 import Ai from "./Ai";
 
-function Adds(props) {
-  const infos = {
-    information_tel: "",
-    surface: "",
-    prix: "",
-    type_ai: "",
-  };
-
+const Adds = (props) => {
   const [arr, setArr] = useState([]);
   const url = "http://127.0.0.1:8000/ai/";
   const token = JSON.parse(localStorage.getItem("Recent_token"))?.token;
@@ -58,7 +51,7 @@ function Adds(props) {
 
   return (
     <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 py-8 px-3 items-center justify-center m-auto">
-      {arr.length > 0 &&
+      {arr &&
         arr.map((ai) => (
           <div key={ai.id}>
             <Ai
@@ -70,6 +63,6 @@ function Adds(props) {
         ))}
     </div>
   );
-}
+};
 
 export default Adds;
