@@ -1,23 +1,13 @@
+import React from "react";
 import {
   BsFillTelephoneOutboundFill,
   BsFillHouseDoorFill,
-  BsHouseDoorFill,
 } from "react-icons/bs";
-import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai";
-import { AiFillDollarCircle, AiFillMail } from "react-icons/ai";
+import { AiFillDollarCircle } from "react-icons/ai";
 import { RxRulerSquare } from "react-icons/rx";
-import { TfiClose } from "react-icons/tfi";
-import { FaUser, FaHouseUser } from "react-icons/fa";
 import image from "./photo.png";
-
 import "leaflet/dist/leaflet.css";
-import { Map, MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import MarkerPosition from "./MarkerPosition";
-// import { useState } from "react";
-//npm install reactjs-popup --save for the popup
-
 import "reactjs-popup/dist/index.css";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Ai = ({ annonce }) => {
@@ -28,7 +18,6 @@ const Ai = ({ annonce }) => {
     information_tel = "",
     images = [],
   } = annonce;
-  const [showModal, setShowModal] = useState(false);
 
   const navigation = useNavigate();
   const Combiner = () => {

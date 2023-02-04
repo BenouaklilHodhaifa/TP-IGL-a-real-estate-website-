@@ -136,7 +136,7 @@ const Recherche = () => {
             )}
 
             {type_3 ? (
-              <div className="w-full flex flex-col sm:flex-row gap-3 items-center justify-center">
+              <div className="w-full flex flex-col md:flex-row gap-3 items-center justify-center">
                 <div id="date_debut">
                   <label
                     className="block font-medium text-gray-700 mb-2"
@@ -171,7 +171,7 @@ const Recherche = () => {
                 </div>
               </div>
             ) : (
-              console.log()
+              <></>
             )}
 
             {type_4 ? (
