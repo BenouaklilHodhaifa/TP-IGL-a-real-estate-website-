@@ -36,7 +36,7 @@ const Personnel = (props) => {
       );
       setReload(!reload);
     } catch (err) {
-      console.log(err);
+     
     }
   };
 

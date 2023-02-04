@@ -1,22 +1,26 @@
 import {
   BsFillTelephoneOutboundFill,
   BsFillHouseDoorFill,
-  BsHouseDoorFill,
 } from "react-icons/bs";
-import { FaUser, FaHouseUser } from "react-icons/fa";
-import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai";
+
 import { AiFillDollarCircle, AiFillMail } from "react-icons/ai";
 import { RxRulerSquare } from "react-icons/rx";
-import { TfiClose } from "react-icons/tfi";
+import { useNavigate } from "react-router-dom";
+
+import { BsFillHeartFill, BsHeart } from "react-icons/bs";
+import image from "./photo.png";
 //npm install reactjs-popup --save for the popup
-
+import "reactjs-popup/dist/index.css";
+import React, { useState } from "react";
 import "leaflet/dist/leaflet.css";
-import { Map, MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import MarkerPosition from "./MarkerPosition";
-import { useState } from "react";
 
-const Ai = ({ annonce }) => {
+import axios from "axios";
+import { FaUnderline } from "react-icons/fa";
+
+const Ai = ({ annonce, favorites, favorites_ai }) => {
+  const token = JSON.parse(localStorage.getItem("Recent_token"))?.token;
   const {
+    id = "",
     titre = "",
     description = "",
     date_Publication = "",
@@ -28,199 +32,129 @@ const Ai = ({ annonce }) => {
     commune = "",
     adresse_ai = "",
     information_tel = "",
-    information_email = "annonceur@email.dz",
-    information_nom = "nom_annonceur",
-    information_prenom = "prenom_annonceur",
-    information_adresse = "adresse_annonceur",
+    information_email = "",
+    information_nom = "",
+    information_prenom = "",
+    information_adresse = "",
     user = "",
-    uploaded_images = [],
+    images = [],
   } = annonce;
-  const [showModal, setShowModal] = useState(false);
-  const [slides, setSlides] = useState(0);
-  const [message, setMessage] = useState("");
-  const [messageChanged, setMessageChanged] = useState(false);
+  const [favorite, setFavorite] = useState(false);
+  const [user_id, setUser_id] = useState(
+    JSON.parse(localStorage.getItem("Recent_id")).id
+  );
+  const [favorite_id, SetFavorite_id] = useState("");
+  const navigation = useNavigate();
+  const Combiner = () => {
+    navigation("Affichage");
+    localStorage.setItem(
+      "Recent_annonce",
+      JSON.stringify({ annonce: annonce.id })
+    );
+  };
 
-  console.log(uploaded_images[0]);
+  React.useEffect(() => {
+    console.log(favorites_ai);
+    console.log(favorites);
+    if (favorites_ai != undefined && favorites_ai.length > 0) {
+      const isFavorite = favorites_ai.some((e) => e.id === id);
+      setFavorite(isFavorite);
+    }
+    if (favorites != undefined && favorites.length > 0) {
+      favorites.map((e) => {
+        if (e.ai == id) {
+          SetFavorite_id(e.id);
+        }
+      });
+    }
+  }, []);
+
   return (
-    <div
-      className="bg-[#F5FBFF] shadow-1  rounded-lg h-full w-[350px] cursor-pointer  hover:shadow-2xl  p-1"
-      onClick={() => setShowModal(!showModal)}
-    >
-      <img
-        src={uploaded_images[0]}
-        alt="imggg"
-        className="w-full h-[230px] rounded-lg"
-      />
+    annonce && (
+      <div>
+        <div
+          className="relative left-3 top-7"
+          id={favorite_id}
+          onClick={(e) => {
+            if (favorite) {
+              if (favorite_id != "") {
+                axios({
+                  method: "delete",
+                  url: `http://127.0.0.1:8000/favorite/${favorite_id}`,
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                })
+                  .then((e) => {
+                    setFavorite(!favorite);
+                  })
+                  .catch((e) => {});
+              }
+            } else {
+              axios({
+                method: "post",
+                url: "http://127.0.0.1:8000/favorite",
+                data: {
+                  ai: id,
+                  user: user_id,
+                },
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+                .then((e) => {
+                  SetFavorite_id(e.data.id);
+                  setFavorite(!favorite);
+                })
+                .catch((e) => {});
+            }
+          }}
+        >
+          {favorite ? (
+            <BsFillHeartFill size={20} className="text-red-500" />
+          ) : (
+            <BsHeart size={20} className="text-red-500" />
+          )}
+        </div>
 
-      <div className="grid grid-cols-2 grid-rows-2 mt-3">
-        <div className="flex flex-row p-4 items-center justify-start">
-          <AiFillDollarCircle size={20} className="text-[#4A60A1]" />
-          <h6 className="ml-2">{prix}</h6>
-          <h6 className="ml-1">DINARS</h6>
-        </div>
-        <div className="flex flex-row p-4 items-center justify-start">
-          <BsFillTelephoneOutboundFill size={20} className="text-[#4A60A1]" />
-          <h6 className="ml-2">{information_tel}</h6>
-        </div>
-        <div className="flex flex-row p-4 items-center justify-start">
-          <RxRulerSquare size={20} className="text-[#4A60A1]" />
-          <h6 className="ml-2">{surface}</h6>
-          <h6 className="ml-1">m^2</h6>
-        </div>
-        <div className="flex flex-row p-4 items-center justify-start">
-          <BsFillHouseDoorFill size={20} className="text-[#4A65A1] " />
-          <h6 className="ml-2">{type_ai}</h6>
-        </div>
-      </div>
+        <div
+          className="bg-[#F5FBFF] shadow-1  rounded-lg min-h-[375px] w-[350px] cursor-pointer  hover:shadow-2xl  p-1"
+          onClick={() => {
+            Combiner();
+          }}
+        >
+          <img
+            src={images[0] ? "http://127.0.0.1:8000/" + images[0].image : image}
+            alt="imggg"
+            className="w-full h-[230px] rounded-lg"
+          />
 
-      {showModal ? (
-        <>
-          <div
-            className="flex flex-col h-[1000px] inset-0 z-50 bg-indigo-200 scroll-auto absolute"
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <div className="flex justify-end w-full p-5">
-              <TfiClose
-                size={30}
-                className="text-[#4A65A1]"
-                onClick={() => {
-                  setShowModal(!showModal);
-                }}
-              />
+          <div className="grid grid-cols-2 grid-rows-2 mt-3">
+            <div className="flex flex-row p-4 items-center justify-start">
+              <AiFillDollarCircle size={20} className="text-[#4A60A1]" />
+              <h6 className="ml-2">{prix}</h6>
+              <h6 className="ml-1">DINARS</h6>
             </div>
-
-            <div className="flex flex-row justify-center w-full my-2 rounded-2xl">
-              <AiOutlineArrowLeft
-                className="relative mt-40 "
-                size={30}
-                onClick={() => {
-                  if (slides > 0) {
-                    setSlides(slides - 1);
-                  }
-                }}
+            <div className="flex flex-row p-4 items-center justify-start">
+              <BsFillTelephoneOutboundFill
+                size={20}
+                className="text-[#4A60A1]"
               />
-              <img
-                src={uploaded_images[slides]}
-                className="mx-5 h-[350px] w-[800px] select-none rounded-lg"
-                onClick={() => {
-                  setSlides((slides + 1) % uploaded_images.length);
-                }}
-              />
-              <AiOutlineArrowRight
-                className="relative mt-40 "
-                size={30}
-                onClick={() => {
-                  if (slides < uploaded_images.length - 1) {
-                    setSlides(slides + 1);
-                  }
-                }}
-              />
+              <h6 className="ml-2">{information_tel}</h6>
             </div>
-            <div className="w-full px-4 md:px-2 md:gap-1 flex flex-col md:flex-row justify-between bg-white">
-              <div className="md:w-1/2 w-full flex-1 px-4 py-4">
-                <h6 className="text-xl font-extrabold text-[#000000] my-2 mx-5">
-                  {titre}
-                </h6>
-                <p className="text-lg  my-2 mx-5">{description}</p>
-                <div className="flex flex-row ml-5">
-                  <div>
-                    <div className="flex flex-row p-4 items-center justify-start">
-                      <AiFillDollarCircle
-                        size={20}
-                        className="text-[#4A60A1]"
-                      />
-                      <h6 className="ml-2">{prix}</h6>
-                      <h6 className="ml-1">DINARS</h6>
-                    </div>
-                    <div className="flex flex-row p-4 items-center justify-start">
-                      <BsFillTelephoneOutboundFill
-                        size={20}
-                        className="text-[#4A60A1]"
-                      />
-                      <h6 className="ml-2">{information_tel}</h6>
-                    </div>
-                    <div className="flex flex-row p-4 items-center justify-start">
-                      <RxRulerSquare size={20} className="text-[#4A60A1]" />
-                      <h6 className="ml-2">{surface}</h6>
-                      <h6 className="ml-1">m^2</h6>
-                    </div>
-                    <div className="flex flex-row p-4 items-center justify-start">
-                      <BsFillHouseDoorFill
-                        size={20}
-                        className="text-[#4A65A1] "
-                      />
-                      <h6 className="ml-2">{type_ai}</h6>
-                    </div>
-                  </div>
-                  <div className="ml-20">
-                    <div className="flex flex-row p-4 items-center justify-start">
-                      <FaUser size={20} className="text-[#4A60A1]" />
-                      <h6 className="ml-2">{information_nom}</h6>
-                    </div>
-                    <div className="flex flex-row p-4 items-center justify-start">
-                      <FaUser size={20} className="text-[#4A60A1]" />
-                      <h6 className="ml-2">{information_prenom}</h6>
-                    </div>
-                    <div className="flex flex-row p-4 items-center justify-start">
-                      <AiFillMail size={20} className="text-[#4A60A1]" />
-                      <h6 className="ml-2">{information_email}</h6>
-                    </div>
-                    <div className="flex flex-row p-4 items-center justify-start">
-                      <FaHouseUser size={20} className="text-[#4A65A1] " />
-                      <h6 className="ml-2">{information_adresse}</h6>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="md:w-1/2 w-full flex-1 flex justify-center mt-4">
-                <MapContainer
-                  attributionControl={false}
-                  center={[35, 3]}
-                  zoom={6}
-                  scrollWheelZoom={true}
-                  style={{ width: "500px", height: "300px" }}
-                >
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright"></a> '
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-
-                  {/*ENTER THE COORDINATES IN POS*/}
-                  <MarkerPosition pos={[35, 3]} />
-                </MapContainer>
-              </div>
+            <div className="flex flex-row p-4 items-center justify-start">
+              <RxRulerSquare size={20} className="text-[#4A60A1]" />
+              <h6 className="ml-2">{surface}</h6>
+              <h6 className="ml-1">m^2</h6>
             </div>
-
-            <div className="flex justify-center flex-row mt-10">
-              <form
-                className="flex flex-row "
-                onSubmit={(e) => {
-                  /*ENVOYER MESSAGE ICI*/
-                }}
-              >
-                <h6 className="text-xl font-extrabold text-[#4A65A1] my-3">
-                  faire une offre :
-                </h6>
-                <textarea
-                  onChange={() => {
-                    setMessageChanged(true);
-                  }}
-                  class="resize-y shadow appearance-none border rounded py-4 px-3 text-gray-700 mb-3  focus:outline-none focus:shadow-outline mx-5"
-                  placeholder="Entrer Votre message"
-                  required
-                />
-                <button className="bg-[#4A65A1] rounded-lg text-white p-2 h-[45px] my-2">
-                  envoyer
-                </button>
-              </form>
+            <div className="flex flex-row p-4 items-center justify-start">
+              <BsFillHouseDoorFill size={20} className="text-[#4A65A1] " />
+              <h6 className="ml-2">{type_ai}</h6>
             </div>
           </div>
-        </>
-      ) : null}
-    </div>
+        </div>
+      </div>
+    )
   );
 };
 

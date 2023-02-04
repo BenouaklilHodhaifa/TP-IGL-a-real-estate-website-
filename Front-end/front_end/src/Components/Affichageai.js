@@ -9,17 +9,13 @@ import { AiFillDollarCircle, AiFillMail } from "react-icons/ai";
 import { RxRulerSquare } from "react-icons/rx";
 import { IoMdReturnRight } from "react-icons/io";
 import { FaUser, FaHouseUser } from "react-icons/fa";
-import image from "./photo.png";
-
+import icon from "./icon";
 import "leaflet/dist/leaflet.css";
-import { Map, MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import MarkerPosition from "./MarkerPosition";
-// import { useState } from "react";
-//npm install reactjs-popup --save for the popup
-
+import { Map, Marker, TileLayer } from "react-leaflet";
+import { Popup, MapContainer } from "react-leaflet";
 import "reactjs-popup/dist/index.css";
-import { useState, useEffect } from "react";
 
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { data } from "autoprefixer";
@@ -49,6 +45,8 @@ const Affichageai = (props) => {
     information_prenom: "",
     information_adresse: "",
     user: "",
+    lat: "",
+    lng: "",
     images: [],
   });
   const Sendmessage = (e) => {
@@ -71,8 +69,8 @@ const Affichageai = (props) => {
       requestOptions
     )
       .then((response) => response.text())
-      .then((response) => console.log(response))
-      .catch((error) => console.log("error", error));
+      .then((e = {}))
+      .catch((error) => {});
   };
 
   useEffect(() => {
@@ -83,9 +81,7 @@ const Affichageai = (props) => {
         },
       })
       .then((response) => {
-        console.log(response.data);
         setRes(response.data);
-        console.log(res);
       });
   }, []);
 
@@ -93,12 +89,13 @@ const Affichageai = (props) => {
     navigation("/");
     localStorage.setItem("Recent_annonce", null);
   };
+  console.log(res.lat);
 
   return (
     <section className="w-full flex flex-col items-center justify-center pb-6">
       <div className="w-full flex items-center justify-center">
         <div
-          className="flex flex-col items-center justify-center inset-0 z-50 bg-[#b3e5fc] relative w-full"
+          className="flex flex-col items-center justify-center inset-0 z-50 bg-gray-100 relative w-11/12  shadow-lg mt-20 rounded-md"
           onClick={(e) => {
             e.stopPropagation();
           }}
@@ -192,8 +189,8 @@ const Affichageai = (props) => {
             <div className="md:w-1/2 w-full flex-1 flex justify-center mt-4">
               <MapContainer
                 attributionControl={false}
-                center={[35, 3]}
-                zoom={6}
+                center={[28.0339, 1.6596]}
+                zoom={4}
                 scrollWheelZoom={true}
                 style={{ width: "500px", height: "300px" }}
               >
@@ -201,8 +198,7 @@ const Affichageai = (props) => {
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright"></a> '
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-
-                <MarkerPosition pos={[35, 3]} />
+                <Marker position={[res.lat, res.lng]} icon={icon} />
               </MapContainer>
             </div>
           </div>

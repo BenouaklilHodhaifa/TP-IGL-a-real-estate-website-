@@ -18,6 +18,7 @@ function App() {
   const { pathname } = useLocation();
   const ProtectRoutes = ({ children }) => {
     const token = JSON.parse(localStorage.getItem("Recent_token"))?.token;
+    console.log(token);
     return !token && pathname !== "/" ? (
       <Navigate to="/" />
     ) : token && pathname === "/" ? (
@@ -42,11 +43,9 @@ function App() {
             <Route path={"Affichage"} element={<Affichageai />} />
           </Route>
         </Routes>
-  </ProtectRoutes>*/}
-    <Ai annonce={housesData[0]}/>
-
+      </ProtectRoutes>
+      {/* <Ai annonce={housesData[0]}/> */}
     </div>
   );
 }
-
-export default App;
+export default App

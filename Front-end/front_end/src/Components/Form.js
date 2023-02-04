@@ -1,10 +1,14 @@
 import { data } from "autoprefixer";
 import axios from "axios";
 import React, { useState } from "react";
+import icon from "./icon";
+import "leaflet/dist/leaflet.css";
+import { Map, Marker, TileLayer } from "react-leaflet";
+import { Popup, MapContainer } from "react-leaflet";
+import "reactjs-popup/dist/index.css";
 
 const Form = () => {
   const id = JSON.parse(localStorage.getItem("Recent_id"))?.id;
-  console.log(id);
   const [titre, setTitre] = useState("");
   const [description, setDescription] = useState("");
   const [date_Publication, setDate_Publication] = useState("");
@@ -23,17 +27,18 @@ const Form = () => {
   const [user, setUser] = useState(id);
   const [uploadedimages, setUploadedimages] = useState([]);
   const token = JSON.parse(localStorage.getItem("Recent_token"))?.token;
+  const [clicking, setClicking] = useState(false);
+  const [stop, setStop] = useState(false);
+
+  const [position, setPosition] = useState({ lat: "", lng: "" });
+  const [position_data, setposition_data] = useState([35, 5]);
+
+  const someEventHandler = (e) => {
+    setPosition(e.latlng);
+  };
   const handleSubmit = async (event) => {
+    setStop(true);
     event.preventDefault();
-    // const multiple_data = [];
-    // const formData = new FormData();
-    // uploadedimages.forEach((file) => {
-    //   formData.append("file", file);
-    //   console.log(file);
-    //   console.log(formData);
-    //   multiple_data.push(file);
-    // });
-    // console.log(multiple_data);
     const formData = new FormData();
     formData.append("titre", titre);
     formData.append("description", description);
@@ -49,7 +54,9 @@ const Form = () => {
     formData.append("information_nom", information_nom);
     formData.append("information_prenom", information_prenom);
     formData.append("information_adresse", information_adresse);
-    formData.append("user", "1");
+    formData.append("user", id);
+    formData.append("lat", parseFloat(position.lat).toFixed(10));
+    formData.append("lng", parseFloat(position.lng).toFixed(10));
     uploadedimages.forEach((image, index) => {
       formData.append("uploaded_images", image);
     });
@@ -63,8 +70,16 @@ const Form = () => {
         "Content-Type": "multipart/form-data",
       },
     })
-      .then((result) => {})
-      .catch((err) => {});
+      .then((result) => {
+        setClicking(true);
+        setStop(false);
+        window.setTimeout(() => {
+          setClicking(false);
+        }, 2000);
+      })
+      .catch((err) => {
+        setStop(false);
+      });
   };
 
   const onImageChange = (e) => {
@@ -138,22 +153,6 @@ const Form = () => {
       <div className="mb-4">
         <label
           className="block font-medium text-gray-700 mb-2"
-          htmlFor="description"
-        >
-          description
-        </label>
-        <input
-          className="w-full border border-gray-400 p-2 rounded-lg"
-          id="description"
-          type={"text"}
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-      </div>
-
-      <div className="mb-4">
-        <label
-          className="block font-medium text-gray-700 mb-2"
           htmlFor="date_publication"
         >
           Publication Date
@@ -217,7 +216,7 @@ const Form = () => {
         <input
           className="w-full border border-gray-400 p-2 rounded-lg"
           id="surface"
-          type="text"
+          type="number"
           value={surface}
           onChange={(e) => setSurface(e.target.value)}
         />
@@ -323,12 +322,64 @@ const Form = () => {
         <input type="file" multiple accept="image/*" onChange={onImageChange} />
       </div>
 
-      <button
-        className="bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600"
-        type="submit"
-      >
-        Submit
-      </button>
+      <div className="w-11/12 m-auto bg-gray-100 rounded-md flex flex-col max-h-max shadow-lg">
+        <div className="w-11/12 m-auto xl:flex 2xl:flex lg:flex max-h-max mt-10  ">
+          <div className=" lg:w-1/2 max-h-max md:w-full sm:w-full ">
+            <MapContainer
+              attributionControl={false}
+              center={[35, 3]}
+              zoom={6}
+              scrollWheelZoom={true}
+              style={{ width: "500px", height: "300px" }}
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright"></a> '
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <Marker
+                position={position_data}
+                icon={icon}
+                draggable={true}
+                eventHandlers={{
+                  move: (e) => {
+                    someEventHandler(e);
+                  },
+                }}
+              />
+            </MapContainer>
+          </div>
+          <div className="lg:w-1/2 h-72 md:w-full sm:w-full">
+            <label
+              className="block font-medium text-gray-700 mb-2 text-center"
+              htmlFor="description"
+            >
+              description
+            </label>
+            <textarea
+              className="w-11/12 h-5/6 border border-gray-400 p-2 rounded-lg "
+              id="description"
+              type={"text"}
+              placeholder="saisi votre description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+        </div>
+        <button
+          disabled={stop}
+          className={` text-white py-2 px-4 rounded-lg hover:bg-indigo-600 mt-5 w-60 m-auto mb-4 ${
+            stop ? "bg-indigo-300" : "bg-indigo-500"
+          }`}
+          type="submit"
+        >
+          Submit
+        </button>
+      </div>
+      {clicking && (
+        <div className="absolute top-1/3 left-1/3 right-1/3 w-60 h-28 z-40">
+          a;ldsflkasdj
+        </div>
+      )}
     </form>
   );
 };

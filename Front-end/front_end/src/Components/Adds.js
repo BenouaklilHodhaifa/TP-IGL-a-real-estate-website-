@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { data } from "autoprefixer";
 import Ai from "./Ai";
+import AiOld from "./Ai_old";
 
 const Adds = (props) => {
   const [arr, setArr] = useState([]);
@@ -50,11 +51,11 @@ const Adds = (props) => {
   }, []);
 
   return (
-    <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 py-8 px-3 items-center justify-center m-auto">
+    <div className="w-full flex flex-col gap-3 md:grid md:grid-cols-2 md:pl-20 lg:grid-cols-3 lg:pl-10 xl:grid-cols-4 xl:pl-12 md:gap-y-4  py-8 px-3 items-center justify-center m-auto bg-transparent">
       {arr &&
         arr.map((ai) => (
           <div key={ai.id}>
-            <Ai
+            <AiOld
               annonce={ai}
               favorites_ai={favorite_ai}
               favorites={favorite_datates}
