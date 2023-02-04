@@ -9,6 +9,7 @@ const Contact = () => {
     <div
       className="w-full flex flex-col items-center justify-center z-0"
       id="Contact"
+      data-testid='contact-1'
     >
       <div className="w-full ">
         <h1 className="text-4xl font-bold bg-slate-300 px-6 py-8 text-center">
