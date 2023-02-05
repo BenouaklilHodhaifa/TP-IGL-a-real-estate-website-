@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
@@ -7,6 +7,7 @@ import jwt_decode from "jwt-decode";
 
 const Auth = () => {
   const navigation = useNavigate();
+
   return (
     <div>
       <GoogleOAuthProvider clientId="699323224027-gn9judmftsjiuqdg3ttb73pj9ghiambq.apps.googleusercontent.com">
@@ -42,7 +43,12 @@ const Auth = () => {
                   id: (await res).data.user_id,
                 })
               );
-              navigation("/user");
+
+              const id_user = (await res).data.user_id;
+              console.log(id_user);
+              id_user !== undefined && id_user === 1
+                ? navigation("/administrator")
+                : navigation("/user");
             } catch (err) {
               console.log(err);
             }

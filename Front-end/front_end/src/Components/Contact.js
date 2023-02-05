@@ -15,25 +15,25 @@ const Contact = () => {
           Contact us
         </h1>
       </div>
-      <div className="w-full flex flex-col md:flex-row items-center justify-center gap-[10px] mb-10">
+      <div className="w-full flex flex-col md:flex-row items-center justify-center gap-[10px] ">
         <div className="w-full md:w-1/2 flex flex-col items-start justify-center gap-[30px] px-[50px] bg-slate-100 py-[40px] ">
           <h3 className="text-bold text-2xl">Contact Information</h3>
           <p>
             Do you Have projects ? or maybe just you want to say hello ? i'd
             love to hear from you .
           </p>
-          <div className="">
+          <div className="font-bold cursor-pointer">
             <div className="w-[200px] h-[50px] flex flex-row items-center justify-start gap-[10px] ">
               <AiOutlineUser size={20} />
-              <h3>The name of the club </h3>
+              <h3>GOHOME</h3>
             </div>
-            <div className="w-[200px] h-[50px] flex flex-row items-center justify-start  gap-[10px] ">
+            <div className="w-[200px] h-[50px] flex flex-row items-center justify-start gap-[10px] ">
               <BsFillTelephoneFill size={20} />
-              <h3>phone Number</h3>
+              <h3>+213668793883</h3>
             </div>
-            <div className="w-[200px] h-[50px] flex flex-row items-center justify-start  gap-[10px] ">
+            <div className="w-[200px] h-[50px] flex flex-row items-center justify-start gap-[10px] ">
               <CgMail size={20} />
-              <h3>exemple@gmail.com</h3>
+              <h3>gohome12@gmail.com</h3>
             </div>
           </div>
           <div className="w-full flex flex-row gap-9 items-center justify-start ">

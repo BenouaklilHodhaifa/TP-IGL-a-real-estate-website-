@@ -13,6 +13,7 @@ import axios from "axios";
 import Personnel from "./Components/Personnel";
 import Favorie from "./Components/Favorie";
 import Affichageai from "./Components/Affichageai";
+import Administrator from "./pages/Administrator";
 
 function App() {
   const { pathname } = useLocation();
@@ -33,13 +34,16 @@ function App() {
       <ProtectRoutes>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/administrator" element={<Administrator />} />
           <Route path="/user" element={<UserPage />}>
             <Route index element={<Adds />} />
             <Route path={"message"} element={<Messages />} />
             <Route path={"Search"} element={<SearchAi />} />
             <Route path={"Ajouter"} element={<AjouterAi />} />
             <Route path={"personnel"} element={<Personnel />} />
-            <Route path={"Favorie"} element={<Favorie />} />
+            <Route path={"Favorie"} element={<Favorie />}>
+              <Route path={"Affichage"} element={<Affichageai />} />
+            </Route>
             <Route path={"Affichage"} element={<Affichageai />} />
           </Route>
         </Routes>
@@ -48,4 +52,4 @@ function App() {
     </div>
   );
 }
-export default App
+export default App;

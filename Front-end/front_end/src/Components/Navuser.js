@@ -22,7 +22,7 @@ const Navuser = () => {
   };
 
   return (
-    <div className="shadow-md w-full sticky left-0  md:w-auto">
+    <div className="shadow-md w-full sticky left-0  md:w-auto z-50">
       <div className="lg:flex items-center justify-between py-4 lg:px-4 px-7">
         <div className="font-bold text-2xl cursor-pointer flex items-center justify-start  font-[poppins] text-gray-800">
           <div
