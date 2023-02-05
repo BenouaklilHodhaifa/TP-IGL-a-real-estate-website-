@@ -2,7 +2,11 @@ import React from "react";
 import { AiOutlineHome } from "react-icons/ai";
 const About = () => {
   return (
-    <section className="w-full transition-all duration-500 ease-in" id="About">
+    <section
+      className="w-full transition-all duration-500 ease-in"
+      id="About"
+      data-testid="about-1"
+    >
       <h1 className="w-full h-12 bg-slate-300 flex items-center justify-center text-bold text-4xl py-12 font-serif">
         About Us
       </h1>

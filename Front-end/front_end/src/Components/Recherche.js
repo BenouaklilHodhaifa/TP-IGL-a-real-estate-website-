@@ -49,7 +49,7 @@ const Recherche = () => {
       .catch((error) => console.log("error", error));
   };
   return (
-    <div className="w-full flex flex-col items-center justify-center">
+    <div className="w-full flex flex-col items-center justify-center" data-testid='recherche-1'>
       {vue ? (
         <div className="w-full flex flex-col items-center justify-center gap-3">
           <h1 className="font-bold text-2xl text-center text-slate-500 my-6">
